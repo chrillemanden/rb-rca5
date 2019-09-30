@@ -1,0 +1,20 @@
+
+Talk about inputs and outputs to the fuzzy controller
+
+To variables determine speed and direction
+- speed  (float range(-1.2f, 1.2f))
+	- forward: +
+	- backward -
+- dir (float range(-0.4f, 0.4f))
+	- left: -
+	- right: +
+
+
+
+
+void poseCallback writes the coordinates of the robot and the orientation
+	for example:
+	- uses: _msg->pose(i).position().x()
+	- _msg->pose(i).orientation().w()
+
+void lidarCallback we should use to the lidar inputs as inputs for the fuzzy controller
