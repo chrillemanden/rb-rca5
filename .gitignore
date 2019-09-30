@@ -1,0 +1,13 @@
+## Specific files ##
+
+robot_control/Makefile
+
+robot_control/robot_control
+
+## Compiled Source ##
+#####################
+
+*.o
+*.so
+*.exe
+
