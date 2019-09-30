@@ -4,6 +4,8 @@ robot_control/Makefile
 
 robot_control/robot_control
 
+build-robot_control-Desktop-Debug
+
 ## Compiled Source ##
 #####################
 
