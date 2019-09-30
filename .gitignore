@@ -13,3 +13,8 @@ build-robot_control-Desktop-Debug
 *.so
 *.exe
 
+
+## User files ##
+################
+*.pro.user
+
