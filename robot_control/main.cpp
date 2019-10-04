@@ -207,7 +207,11 @@ int main(int _argc, char **_argv) {
     {
         gazebo::common::Time::MSleep(10);
 
-        if(tick > 0)
+	mutex.lock();
+    	int key = cv::waitKey(1);
+    	mutex.unlock();
+        
+	if(tick > 0)
         {
             fl::scalar distance = global_minDist;
             fl::scalar angle = global_angle;
