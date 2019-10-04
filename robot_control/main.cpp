@@ -1,12 +1,16 @@
 #include <gazebo/gazebo_client.hh>
 #include <gazebo/msgs/msgs.hh>
 #include <gazebo/transport/transport.hh>
+#include "fl/Headers.h"
+#include <boost/math/constants/constants.hpp>
 
 #include <opencv2/opencv.hpp>
 
 #include <iostream>
 
 static boost::mutex mutex;
+
+const double pi = boost::math::constants::pi<double>();
 
 void statCallback(ConstWorldStatisticsPtr &_msg) {
   (void)_msg;
@@ -47,6 +51,43 @@ void cameraCallback(ConstImageStampedPtr &msg) {
   mutex.lock();
   cv::imshow("camera", im);
   mutex.unlock();
+}
+
+void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
+{
+    std::cout << "Hello!" << std::endl;
+    float angle_min = float(msg->scan().angle_min());
+    //  double angle_max = msg->scan().angle_max();
+    float angle_increment = float(msg->scan().angle_step());
+
+    float range_min = float(msg->scan().range_min());
+    float range_max = float(msg->scan().range_max());
+
+    int nranges = msg->scan().ranges_size();
+
+    float range = *std::min_element(msg->scan().ranges().begin(), msg->scan().ranges().end());
+    std::cout << "Lowest range is: " << range << std::endl;
+
+    //
+    std::vector<double> half_circle_range;
+    //std::cout << "pi: " << pi << std::endl;
+    //std::cout << "nranges: " << nranges << std::endl;
+
+    for (int i = 0; i < nranges; i++) {
+        //std::cout << "half pi: " << -0.5 * pi << std::endl;
+        //std::cout << "current val: " << msg->scan().ranges(i) << std::endl;
+        if (angle_min + i * angle_increment >= -0.5 * pi && angle_min + i * angle_increment <= 0.5 * pi)
+        {
+            half_circle_range.push_back(msg->scan().ranges(i));
+        }
+    }
+    //std::cout << "Size of new range: " << half_circle_range.size() << std::endl;
+    double min_dist = *std::min_element(half_circle_range.begin(), half_circle_range.end());
+    std::cout << "Min dist in half-circle is: " << min_dist << std::endl;
+    int min_dist_index = std::min_element(half_circle_range.begin(),half_circle_range.end()) - half_circle_range.begin();::
+    std::cout << "Index: " << min_dist_index << std::endl;
+    double min_dist_angle = -0.5 * pi + angle_increment * min_dist_index;
+    std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
 }
 
 void lidarCallback(ConstLaserScanStampedPtr &msg) {
@@ -116,6 +157,9 @@ int main(int _argc, char **_argv) {
 
   gazebo::transport::SubscriberPtr lidarSubscriber =
       node->Subscribe("~/pioneer2dx/hokuyo/link/laser/scan", lidarCallback);
+
+  gazebo::transport::SubscriberPtr simpleLidarSubscriber =
+      node->Subscribe("~/pioneer2dx/hokuyo/link/laser/scan", simpleLidarCallback);
 
   // Publish to the robot vel_cmd topic
   gazebo::transport::PublisherPtr movementPublisher =
