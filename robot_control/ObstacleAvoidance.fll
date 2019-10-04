@@ -1,0 +1,80 @@
+#File: ObstacleAvoidance.fll
+Engine: ObstacleAvoidance
+InputVariable: obstacle_distance
+  enabled: true
+  range: 0.080 10.000
+  lock-range: false
+  term: veryClose Ramp  3.387 0.080
+  term: close Triangle 0.080 3.387 1.000
+  term: far Triangle 3.387 6.693 10.000
+  term: veryFar Ramp 6.693 10.000
+
+InputVariable: obstacle_angle
+  enabled: true
+  range: -1.571 1.571
+  lock-range: false
+  term: farLeft Ramp -1.047 -1.571 #-1.571 -1.047
+  term: left Triangle -1.571 -1.047 -0.524
+  term: closeLeft Triangle -1.047 -0.524 0.000
+  term: forward Triangle -0.524 0.000 0.524
+  term: closeRight Triangle 0.000 0.524 1.047
+  term: right Triangle 0.524 1.047 1.571
+  term: farRight Ramp 1.047 1.571
+
+OutputVariable: mSteer
+  enabled: true
+  range: -0.400 0.400
+  lock-range: false
+  aggregation: Maximum
+  defuzzifier: Centroid 100
+  default: 0
+  lock-previous: false
+  term: leftVeryBig Ramp -0.267 -0.400
+  term: leftBig Triangle -0.400 -0.267 -0.133
+  term: left Triangle  -0.267 -0.133 0.000
+  term: forward Triangle  -0.133 0.000 0.133
+  term: right Triangle  0.000 0.133 0.267
+  term: rightBig Triangle  0.133 0.267 0.400
+  term: rightVeryBig Ramp  0.267 0.400
+
+RuleBlock: mamdani
+  enabled: true
+  conjunction: Minimum
+  disjunction: none
+  implication: Minimum
+  activation: General
+  #First row in the rule base table
+  rule: if obstacle_distance is veryClose and obstacle_angle is farLeft then mSteer is right
+  rule: if obstacle_distance is veryClose and obstacle_angle is left then mSteer is rightBig
+  rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft then mSteer is rightVeryBig
+  rule: if obstacle_distance is veryClose and obstacle_angle is forward then mSteer is leftBig
+  rule: if obstacle_distance is veryClose and obstacle_angle is closeRight then mSteer is leftVeryBig
+  rule: if obstacle_distance is veryClose and obstacle_angle is right then mSteer is leftBig
+  rule: if obstacle_distance is veryClose and obstacle_angle is farRight then mSteer is left
+
+  #second row in hte rule base table
+  rule: if obstacle_distance is close and obstacle_angle is farLeft then mSteer is right
+  rule: if obstacle_distance is close and obstacle_angle is left then mSteer is rightBig
+  rule: if obstacle_distance is close and obstacle_angle is closeLeft then mSteer is rightBig
+  rule: if obstacle_distance is close and obstacle_angle is forward then mSteer is left
+  rule: if obstacle_distance is close and obstacle_angle is closeRight then mSteer is leftBig
+  rule: if obstacle_distance is close and obstacle_angle is right then mSteer is leftBig
+  rule: if obstacle_distance is close and obstacle_angle is farRight then mSteer is left
+
+  #third row in the rule base table
+  rule: if obstacle_distance is far and obstacle_angle is farLeft then mSteer is forward
+  rule: if obstacle_distance is far and obstacle_angle is left then mSteer is right
+  rule: if obstacle_distance is far and obstacle_angle is closeLeft then mSteer is right
+  #rule: if obstacle_distance is far and obstacle_angle is forward then mSteer is left
+  rule: if obstacle_distance is far and obstacle_angle is closeRight then mSteer is left
+  rule: if obstacle_distance is far and obstacle_angle is right then mSteer is left
+  rule: if obstacle_distance is far and obstacle_angle is farRight then mSteer is forward
+
+  #Fourth row in the rule base table
+  rule: if obstacle_distance is veryFar and obstacle_angle is farLeft then mSteer is forward
+  rule: if obstacle_distance is veryFar and obstacle_angle is left then mSteer is forward
+  rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft then mSteer is right
+  rule: if obstacle_distance is veryFar and obstacle_angle is forward then mSteer is left
+  rule: if obstacle_distance is veryFar and obstacle_angle is closeRight then mSteer is left
+  rule: if obstacle_distance is veryFar and obstacle_angle is right then mSteer is forward
+  rule: if obstacle_distance is veryFar and obstacle_angle is farRight then mSteer is forward

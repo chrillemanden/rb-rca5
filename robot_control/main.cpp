@@ -9,8 +9,10 @@
 #include <iostream>
 
 static boost::mutex mutex;
-
+int tick = 0;
 const double pi = boost::math::constants::pi<double>();
+double global_minDist;
+double global_angle;
 
 void statCallback(ConstWorldStatisticsPtr &_msg) {
   (void)_msg;
@@ -55,7 +57,8 @@ void cameraCallback(ConstImageStampedPtr &msg) {
 
 void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
 {
-    std::cout << "Hello!" << std::endl;
+
+    //std::cout << "Hello!" << std::endl;
     float angle_min = float(msg->scan().angle_min());
     //  double angle_max = msg->scan().angle_max();
     float angle_increment = float(msg->scan().angle_step());
@@ -66,7 +69,7 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
     int nranges = msg->scan().ranges_size();
 
     float range = *std::min_element(msg->scan().ranges().begin(), msg->scan().ranges().end());
-    std::cout << "Lowest range is: " << range << std::endl;
+    //std::cout << "Lowest range is: " << range << std::endl;
 
     //
     std::vector<double> half_circle_range;
@@ -83,12 +86,18 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
     }
     //std::cout << "Size of new range: " << half_circle_range.size() << std::endl;
     double min_dist = *std::min_element(half_circle_range.begin(), half_circle_range.end());
-    std::cout << "Min dist in half-circle is: " << min_dist << std::endl;
-    int min_dist_index = std::min_element(half_circle_range.begin(),half_circle_range.end()) - half_circle_range.begin();::
-    std::cout << "Index: " << min_dist_index << std::endl;
+    //std::cout << "Min dist in half-circle is: " << min_dist << std::endl;
+    int min_dist_index = std::min_element(half_circle_range.begin(),half_circle_range.end()) - half_circle_range.begin();
+    //std::cout << "Index: " << min_dist_index << std::endl;
     double min_dist_angle = -0.5 * pi + angle_increment * min_dist_index;
-    std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
+    //std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
+    global_minDist = min_dist*4;
+    if (global_minDist > 10)
+        global_minDist = 10;
+    global_angle = min_dist_angle;
+    tick++;
 }
+
 
 void lidarCallback(ConstLaserScanStampedPtr &msg) {
 
@@ -149,8 +158,8 @@ int main(int _argc, char **_argv) {
   gazebo::transport::SubscriberPtr statSubscriber =
       node->Subscribe("~/world_stats", statCallback);
 
-  gazebo::transport::SubscriberPtr poseSubscriber =
-      node->Subscribe("~/pose/info", poseCallback);
+  //gazebo::transport::SubscriberPtr poseSubscriber =
+  //    node->Subscribe("~/pose/info", poseCallback);
 
   gazebo::transport::SubscriberPtr cameraSubscriber =
       node->Subscribe("~/pioneer2dx/camera/link/camera/image", cameraCallback);
@@ -173,39 +182,45 @@ int main(int _argc, char **_argv) {
   worldPublisher->WaitForConnection();
   worldPublisher->Publish(controlMessage);
 
-  const int key_left = 81;
-  const int key_up = 82;
-  const int key_down = 84;
-  const int key_right = 83;
-  const int key_esc = 27;
+  fl::Engine* engine = fl::FllImporter().fromFile("ObstacleAvoidance.fll");
+  std::string status;
+   engine->isReady(&status);
+   std::cout << "test" << status << std::endl;
 
-  float speed = 0.0;
+   if (not engine->isReady(&status))
+     {
+       std::cout << "not found" << std::endl;
+       throw fl::Exception("[engine error] engine is not ready:n" + status, FL_AT);
+     }
+
+   fl::InputVariable* obstacle_distance = engine->getInputVariable("obstacle_distance");
+   fl::InputVariable* obstacle_angle = engine->getInputVariable("obstacle_angle");
+   fl::OutputVariable* steer = engine->getOutputVariable("mSteer");
+
+
+
+  float speed = 0.25;
   float dir = 0.0;
 
   // Loop
-  while (true) {
-    gazebo::common::Time::MSleep(10);
+    while (true)
+    {
+        gazebo::common::Time::MSleep(10);
 
-    mutex.lock();
-    int key = cv::waitKey(1);
-    mutex.unlock();
+        if(tick > 0)
+        {
+            fl::scalar distance = global_minDist;
+            fl::scalar angle = global_angle;
+            obstacle_angle->setValue(angle);
+            obstacle_distance->setValue(distance);
+            engine->process();
+            dir = steer->getValue();
+            tick--;
+            std::cout << "global_minDist: " << distance << std::endl;
+            std::cout << "dir: " << dir << std::endl;
+        }
 
-    if (key == key_esc)
-      break;
 
-    if ((key == key_up) && (speed <= 1.2f))
-      speed += 0.05;
-    else if ((key == key_down) && (speed >= -1.2f))
-      speed -= 0.05;
-    else if ((key == key_right) && (dir <= 0.4f))
-      dir += 0.05;
-    else if ((key == key_left) && (dir >= -0.4f))
-      dir -= 0.05;
-    else {
-      // slow down
-      //      speed *= 0.1;
-      //      dir *= 0.1;
-    }
 
     // Generate a pose
     ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
@@ -214,7 +229,7 @@ int main(int _argc, char **_argv) {
     gazebo::msgs::Pose msg;
     gazebo::msgs::Set(&msg, pose);
     movementPublisher->Publish(msg);
-  }
+    }
 
   // Make sure to shut everything down.
   gazebo::client::shutdown();
