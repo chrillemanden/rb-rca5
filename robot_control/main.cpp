@@ -89,9 +89,10 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
     //std::cout << "Min dist in half-circle is: " << min_dist << std::endl;
     int min_dist_index = std::min_element(half_circle_range.begin(),half_circle_range.end()) - half_circle_range.begin();
     //std::cout << "Index: " << min_dist_index << std::endl;
-    double min_dist_angle = -0.5 * pi + angle_increment * min_dist_index;
-    //std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
-    global_minDist = min_dist*4;
+    double min_dist_angle = (-0.5 * pi + angle_increment * min_dist_index) * -1;
+    std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
+
+    global_minDist = min_dist*1.5;
     if (global_minDist > 10)
         global_minDist = 10;
     global_angle = min_dist_angle;
@@ -207,6 +208,10 @@ int main(int _argc, char **_argv) {
     {
         gazebo::common::Time::MSleep(10);
 
+        mutex.lock();
+        int key = cv::waitKey(1);
+        mutex.unlock();
+
         if(tick > 0)
         {
             fl::scalar distance = global_minDist;
@@ -219,6 +224,11 @@ int main(int _argc, char **_argv) {
             std::cout << "global_minDist: " << distance << std::endl;
             std::cout << "dir: " << dir << std::endl;
         }
+
+
+
+
+
 
 
 
