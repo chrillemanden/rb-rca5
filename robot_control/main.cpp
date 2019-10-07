@@ -6,7 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-//Driver inlcudes
+/* Driver includes */
 #include "camera.h"
 #include "lidar.h"
 #include "robot.h"
@@ -60,24 +60,14 @@ int main(int _argc, char **_argv) {
     worldPublisher->WaitForConnection();
     worldPublisher->Publish(controlMessage);
 
-    fl::Engine* engine = fl::FllImporter().fromFile("ObstacleAvoidance.fll");
-    std::string status;
-    engine->isReady(&status);
-    std::cout << "test" << status << std::endl;
 
-    if (not engine->isReady(&status))
-    {
-        std::cout << "not found" << std::endl;
-        throw fl::Exception("[engine error] engine is not ready:n" + status, FL_AT);
-    }
-
-    fl::InputVariable* obstacle_distance = engine->getInputVariable("obstacle_distance");
-    fl::InputVariable* obstacle_angle = engine->getInputVariable("obstacle_angle");
-    fl::OutputVariable* steer = engine->getOutputVariable("mSteer");
-    fl::OutputVariable* output_speed = engine->getOutputVariable("robot_speed");
+    // Initialise fuzzy controller
+    init_fuzzy_controller();
 
     float speed = 0.0;
     float dir = 0.0;
+    // Array that has direction and speed from control functions
+    float arrSteer[2];
 
     // Loop
     while (true)
@@ -90,16 +80,13 @@ int main(int _argc, char **_argv) {
 
         if(tick > 0)
         {
-            fl::scalar distance = global_minDist;
-            fl::scalar angle = global_angle;
-            obstacle_angle->setValue(angle);
-            obstacle_distance->setValue(distance);
-            engine->process();
-            dir = steer->getValue();
-            speed = output_speed->getValue();
+            simple_fuzzy_avoidance(arrSteer);
+
+            // Get speed and direction from the control function
+            speed = arrSteer[0];
+            dir = arrSteer[1];
+
             tick--;
-            std::cout << "global_minDist: " << distance << std::endl;
-            std::cout << "dir: " << dir << std::endl;
         }
 
     // Generate a pose

@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
+/* Driver includes */
 #include "lidar.h"
 
 const double pi = boost::math::constants::pi<double>();
