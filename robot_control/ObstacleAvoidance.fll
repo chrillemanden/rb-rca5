@@ -37,13 +37,27 @@ OutputVariable: mSteer
   term: rightBig Triangle  0.133 0.267 0.400
   term: rightVeryBig Ramp  0.267 0.400
 
+OutputVariable: robot_speed
+    enabled: true
+    range: 0.000 1.200
+    lock-range: false
+    aggregation: Maximum
+    defuzzifier: Centroid 100
+    default: 0
+    lock-previous: false
+    term: min Ramp  0.400 0.000
+    term: slow Triangle 0.000 0.400 0.800
+    term: fast Triangle 0.400 0.800 1.200
+    term: max Ramp 0.800 1.200
+
 RuleBlock: mamdani
   enabled: true
   conjunction: Minimum
   disjunction: none
   implication: Minimum
   activation: General
-  #First row in the rule base table
+
+  #First row in the rule base table - mSteer
   rule: if obstacle_distance is veryClose and obstacle_angle is farLeft then mSteer is right
   rule: if obstacle_distance is veryClose and obstacle_angle is left then mSteer is rightBig
   rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft then mSteer is rightVeryBig
@@ -52,7 +66,7 @@ RuleBlock: mamdani
   rule: if obstacle_distance is veryClose and obstacle_angle is right then mSteer is leftBig
   rule: if obstacle_distance is veryClose and obstacle_angle is farRight then mSteer is left
 
-  #second row in hte rule base table
+  #second row in the rule base table - mSteer
   rule: if obstacle_distance is close and obstacle_angle is farLeft then mSteer is right
   rule: if obstacle_distance is close and obstacle_angle is left then mSteer is rightBig
   rule: if obstacle_distance is close and obstacle_angle is closeLeft then mSteer is rightBig
@@ -61,7 +75,7 @@ RuleBlock: mamdani
   rule: if obstacle_distance is close and obstacle_angle is right then mSteer is leftBig
   rule: if obstacle_distance is close and obstacle_angle is farRight then mSteer is left
 
-  #third row in the rule base table
+  #third row in the rule base table - mSteer
   rule: if obstacle_distance is far and obstacle_angle is farLeft then mSteer is forward
   rule: if obstacle_distance is far and obstacle_angle is left then mSteer is right
   rule: if obstacle_distance is far and obstacle_angle is closeLeft then mSteer is right
@@ -70,7 +84,7 @@ RuleBlock: mamdani
   rule: if obstacle_distance is far and obstacle_angle is right then mSteer is left
   rule: if obstacle_distance is far and obstacle_angle is farRight then mSteer is forward
 
-  #Fourth row in the rule base table
+  #Fourth row in the rule base table - mSteer
   rule: if obstacle_distance is veryFar and obstacle_angle is farLeft then mSteer is forward
   rule: if obstacle_distance is veryFar and obstacle_angle is left then mSteer is forward
   rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft then mSteer is right
@@ -78,3 +92,39 @@ RuleBlock: mamdani
   rule: if obstacle_distance is veryFar and obstacle_angle is closeRight then mSteer is left
   rule: if obstacle_distance is veryFar and obstacle_angle is right then mSteer is forward
   rule: if obstacle_distance is veryFar and obstacle_angle is farRight then mSteer is forward
+
+  #First row in the rule base table - robot_speed
+  rule: if obstacle_distance is veryClose and obstacle_angle is farLeft then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is left then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is forward then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is closeRight then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is right then robot_speed is min
+  rule: if obstacle_distance is veryClose and obstacle_angle is farRight then robot_speed is min
+
+  #second row in the rule base table - robot_speed
+  rule: if obstacle_distance is close and obstacle_angle is farLeft then robot_speed is slow
+  rule: if obstacle_distance is close and obstacle_angle is left then robot_speed is slow
+  rule: if obstacle_distance is close and obstacle_angle is closeLeft then robot_speed is slow
+  rule: if obstacle_distance is close and obstacle_angle is forward then robot_speed is min
+  rule: if obstacle_distance is close and obstacle_angle is closeRight then robot_speed is slow
+  rule: if obstacle_distance is close and obstacle_angle is right then robot_speed is slow
+  rule: if obstacle_distance is close and obstacle_angle is farRight then robot_speed is slow
+
+  #third row in the rule base table - robot_speed
+  rule: if obstacle_distance is far and obstacle_angle is farLeft then robot_speed is fast
+  rule: if obstacle_distance is far and obstacle_angle is left then robot_speed is fast
+  rule: if obstacle_distance is far and obstacle_angle is closeLeft then robot_speed is slow
+  rule: if obstacle_distance is far and obstacle_angle is forward then robot_speed is slow
+  rule: if obstacle_distance is far and obstacle_angle is closeRight then robot_speed is slow
+  rule: if obstacle_distance is far and obstacle_angle is right then robot_speed is fast
+  rule: if obstacle_distance is far and obstacle_angle is farRight then robot_speed is fast
+
+ #Fourth row in the rule base table - mSteer
+  rule: if obstacle_distance is veryFar and obstacle_angle is farLeft then robot_speed is max
+  rule: if obstacle_distance is veryFar and obstacle_angle is left then robot_speed is max
+  rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft then robot_speed is fast
+  rule: if obstacle_distance is veryFar and obstacle_angle is forward then robot_speed is fast
+  rule: if obstacle_distance is veryFar and obstacle_angle is closeRight then robot_speed is fast
+  rule: if obstacle_distance is veryFar and obstacle_angle is right then robot_speed is max
+  rule: if obstacle_distance is veryFar and obstacle_angle is farRight then robot_speed is max

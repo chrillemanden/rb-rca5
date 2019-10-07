@@ -197,10 +197,11 @@ int main(int _argc, char **_argv) {
    fl::InputVariable* obstacle_distance = engine->getInputVariable("obstacle_distance");
    fl::InputVariable* obstacle_angle = engine->getInputVariable("obstacle_angle");
    fl::OutputVariable* steer = engine->getOutputVariable("mSteer");
+   fl::OutputVariable* output_speed = engine->getOutputVariable("robot_speed");
 
 
 
-  float speed = 0.25;
+  float speed = 0.0;
   float dir = 0.0;
 
   // Loop
@@ -220,6 +221,7 @@ int main(int _argc, char **_argv) {
             obstacle_distance->setValue(distance);
             engine->process();
             dir = steer->getValue();
+            speed = output_speed->getValue();
             tick--;
             std::cout << "global_minDist: " << distance << std::endl;
             std::cout << "dir: " << dir << std::endl;
