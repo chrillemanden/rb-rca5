@@ -11,7 +11,7 @@
 #include "lidar.h"
 #include "robot.h"
 #include "gazebo.h"
-#include "fuzzy_controller.h"
+//#include "fuzzy_controller.h"
 
 static boost::mutex mutex;
 
@@ -66,9 +66,14 @@ int main(int _argc, char **_argv) {
 
     float speed = 0.0;
     float dir = 0.0;
+<<<<<<< HEAD
     // Array that has direction and speed from control functions
     float arrSteer[2];
+=======
+    const int key_left = 81;
+>>>>>>> refs/remotes/origin/master
 
+    //init_video_capture();
     // Loop
     while (true)
     {
@@ -78,6 +83,10 @@ int main(int _argc, char **_argv) {
         int key = cv::waitKey(1);
         mutex.unlock();
 
+        if(key == key_left)
+        {
+            break;
+        }
         if(tick > 0)
         {
             simple_fuzzy_avoidance(arrSteer);
@@ -97,7 +106,7 @@ int main(int _argc, char **_argv) {
     gazebo::msgs::Set(&msg, pose);
     movementPublisher->Publish(msg);
     }
-
+  //destroy_video_capture();
   // Make sure to shut everything down.
   gazebo::client::shutdown();
 }
