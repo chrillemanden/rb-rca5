@@ -80,7 +80,7 @@ int main(int _argc, char **_argv) {
     float dir = 0.0;
     const int key_left = 81;
 
-    init_video_capture();
+    //init_video_capture();
     // Loop
     while (true)
     {
@@ -116,7 +116,7 @@ int main(int _argc, char **_argv) {
     gazebo::msgs::Set(&msg, pose);
     movementPublisher->Publish(msg);
     }
-  destroy_video_capture();
+  //destroy_video_capture();
   // Make sure to shut everything down.
   gazebo::client::shutdown();
 }
