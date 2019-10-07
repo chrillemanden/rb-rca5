@@ -8,6 +8,9 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
+void init_video_capture();
+
+void destroy_video_capture();
 
 void cameraCallback(ConstImageStampedPtr &msg);
 

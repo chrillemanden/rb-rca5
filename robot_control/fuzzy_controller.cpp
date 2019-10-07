@@ -1,5 +1,7 @@
+#include "fl/Headers.h"
 #include "fuzzy_controller.h"
 
+/*
 void simple_fuzzy_avoidance()
 {
     fl::scalar distance = global_minDist;
@@ -12,4 +14,4 @@ void simple_fuzzy_avoidance()
     tick--;
     std::cout << "global_minDist: " << distance << std::endl;
     std::cout << "dir: " << dir << std::endl;
-}
+} */

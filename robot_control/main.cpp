@@ -11,7 +11,7 @@
 #include "lidar.h"
 #include "robot.h"
 #include "gazebo.h"
-#include "fuzzy_controller.h"
+//#include "fuzzy_controller.h"
 
 static boost::mutex mutex;
 
@@ -78,7 +78,9 @@ int main(int _argc, char **_argv) {
 
     float speed = 0.0;
     float dir = 0.0;
+    const int key_left = 81;
 
+    init_video_capture();
     // Loop
     while (true)
     {
@@ -88,6 +90,10 @@ int main(int _argc, char **_argv) {
         int key = cv::waitKey(1);
         mutex.unlock();
 
+        if(key == key_left)
+        {
+            break;
+        }
         if(tick > 0)
         {
             fl::scalar distance = global_minDist;
@@ -110,7 +116,7 @@ int main(int _argc, char **_argv) {
     gazebo::msgs::Set(&msg, pose);
     movementPublisher->Publish(msg);
     }
-
+  destroy_video_capture();
   // Make sure to shut everything down.
   gazebo::client::shutdown();
 }
