@@ -65,7 +65,7 @@ RuleBlock: mamdani
   rule: if obstacle_distance is far and obstacle_angle is farLeft then mSteer is forward
   rule: if obstacle_distance is far and obstacle_angle is left then mSteer is right
   rule: if obstacle_distance is far and obstacle_angle is closeLeft then mSteer is right
-  #rule: if obstacle_distance is far and obstacle_angle is forward then mSteer is left
+  rule: if obstacle_distance is far and obstacle_angle is forward then mSteer is left
   rule: if obstacle_distance is far and obstacle_angle is closeRight then mSteer is left
   rule: if obstacle_distance is far and obstacle_angle is right then mSteer is left
   rule: if obstacle_distance is far and obstacle_angle is farRight then mSteer is forward
