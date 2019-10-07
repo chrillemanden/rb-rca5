@@ -1,5 +1,4 @@
 #include "fl/Headers.h"
-<<<<<<< HEAD
 
 /* Driver includes */
 #include "fuzzy_controller.h"
@@ -34,19 +33,13 @@ void init_fuzzy_controller()
 }
 
 void simple_fuzzy_avoidance(float arrSteer[])
-=======
-#include "fuzzy_controller.h"
-
-/*
-void simple_fuzzy_avoidance()
->>>>>>> refs/remotes/origin/master
 {
     fl::scalar distance = global_minDist;
     fl::scalar angle = global_angle;
     obstacle_angle->setValue(angle);
     obstacle_distance->setValue(distance);
     engine->process();
-<<<<<<< HEAD
+
     float dir = steer->getValue();
     float speed = output_speed->getValue();
 
@@ -57,11 +50,4 @@ void simple_fuzzy_avoidance()
     arrSteer[1] = dir;
 
 }
-=======
-    dir = steer->getValue();
-    speed = output_speed->getValue();
-    tick--;
-    std::cout << "global_minDist: " << distance << std::endl;
-    std::cout << "dir: " << dir << std::endl;
-} */
->>>>>>> refs/remotes/origin/master
+
