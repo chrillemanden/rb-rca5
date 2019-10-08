@@ -3,7 +3,7 @@
 int canny_threshold1;
 int canny_threshold2;
 cv::Mat edges;
- cv::Mat img;
+cv::Mat img;
 
 void get_frame(cv::Mat& outputImg, int frameNum)
 {
@@ -47,7 +47,7 @@ void pre_processing(cv::Mat& inputImg, cv::Mat& outputImg)
 {
     cv::Mat temp_img;
     equalize_luminance(inputImg, temp_img);
-    cv::GaussianBlur(temp_img, temp_img, cv::Size(5,5), 1.5);
+    cv::GaussianBlur(temp_img, temp_img, cv::Size(9,9), 2, 2);
     cv::medianBlur(temp_img, temp_img, 3);
     outputImg = temp_img.clone();
 }
@@ -59,7 +59,7 @@ std::vector<cv::Vec3f> detect_marbels(cv::Mat& inputImg)
     cv::Mat test_img;
     cv::cvtColor(inputImg, test_img, cv::COLOR_BGR2GRAY);
 
-    cv::HoughCircles(test_img, circles,cv::HOUGH_GRADIENT, 1, inputImg.rows/8, 180, 24, 0, 0);
+    cv::HoughCircles(test_img, circles,cv::HOUGH_GRADIENT, 1, inputImg.rows/12, 170, 24, 0, 0);
 
     for(int i = 0; i < circles.size(); i++)
     {
@@ -76,33 +76,38 @@ std::vector<cv::Vec3f> detect_marbels(cv::Mat& inputImg)
 
 int main(int argc, char *argv[])
 {
+    cv::VideoCapture cap("videoOuput.avi");
+    cv::VideoWriter video("processed_camera_output.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, cv::Size(320, 240));
 
+    if(cap.isOpened() == false)
+    {
+        std::cout << "Error opening video stream or file" << std::endl;
+        return -1;
+    }
 
-    get_frame(img, 10);
-    //cv::cvtColor(img, img, cv::COLOR_BGR2HLS);
-    //Display raw image
-    pre_processing(img, img);
-    detect_marbels(img);
-
+    cv::Mat camera_input;
     cv::namedWindow("Display window 1", cv::WINDOW_AUTOSIZE);
-    cv::imshow("Display window 1", img);
 
+    //for(;;) //use for the complete film
+    for(int i = 0; i < 150; i++) //use for only the first couple of frames
+    {
+        cap >> camera_input;
 
-    //Display edge detected image
-    //cv::namedWindow("Edge Detection", cv::WINDOW_AUTOSIZE);
+        if(!cap.isOpened())
+        {
+            std::cout << "empty" << std::endl;
+            break;
+        }
 
-    //char TrackBarName1[10] = "thres 1";
-    //char TrackBarName2[10] = "thres 2";
-    //cv::createTrackbar(TrackBarName1, "Edge Detection", &canny_threshold1, 255, canny_trackbar_callback );
-    //cv::createTrackbar(TrackBarName2, "Edge Detection", &canny_threshold2, 255, canny_trackbar_callback );
+        pre_processing(camera_input, camera_input);
+        detect_marbels(camera_input);
 
-    //std::vector<cv::Vec3f> circles;
-    //cv::Mat img_gray;
-    //cv::cvtColor(img, img_gray, cv::COLOR_BGR2GRAY);
-    //cv::imwrite("video_ouput_img.jpg", img_gray);
-    //cv::HoughCircles(img_gray, )
-
-
+        cv::imshow("Display window 1", camera_input);
+        video.write(camera_input);
+        cv::waitKey(25);
+    }
+    cap.release();
+    video.release();
     cv::waitKey(0);
     return 1;
 }
