@@ -51,7 +51,7 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
     int min_dist_index = std::min_element(half_circle_range.begin(),half_circle_range.end()) - half_circle_range.begin();
     //std::cout << "Index: " << min_dist_index << std::endl;
     double min_dist_angle = (-0.5 * pi + angle_increment * min_dist_index) * -1;
-    std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
+    //std::cout << "Angle of min dist in half-circle is: " << min_dist_angle << std::endl;
 
     global_minDist = min_dist;
     if (global_minDist > 10)

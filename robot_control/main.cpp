@@ -16,8 +16,11 @@
 static boost::mutex mutex;
 
 int tick = 0;
+double goal_x;
+double goal_y;
 double global_minDist;
 double global_angle;
+double global_goal_angle;
 
 
 int main(int _argc, char **_argv) {
@@ -36,8 +39,8 @@ int main(int _argc, char **_argv) {
     gazebo::transport::SubscriberPtr statSubscriber =
         node->Subscribe("~/world_stats", statCallback);
 
-    //gazebo::transport::SubscriberPtr poseSubscriber =
-    //    node->Subscribe("~/pose/info", poseCallback);
+    gazebo::transport::SubscriberPtr poseSubscriber =
+        node->Subscribe("~/pose/info", poseCallback);
 
     gazebo::transport::SubscriberPtr cameraSubscriber =
         node->Subscribe("~/pioneer2dx/camera/link/camera/image", cameraCallback);
@@ -66,6 +69,8 @@ int main(int _argc, char **_argv) {
 
     float speed = 0.0;
     float dir = 0.0;
+    goal_x = -20.0;
+    goal_y = -0.0;
 
     // Array that has direction and speed from control functions
     float arrSteer[2];
@@ -98,13 +103,13 @@ int main(int _argc, char **_argv) {
             tick--;
         }
 
-    // Generate a pose
-    ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
+        // Generate a pose
+        ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
 
-    // Convert to a pose message
-    gazebo::msgs::Pose msg;
-    gazebo::msgs::Set(&msg, pose);
-    movementPublisher->Publish(msg);
+        // Convert to a pose message
+        gazebo::msgs::Pose msg;
+        gazebo::msgs::Set(&msg, pose);
+        movementPublisher->Publish(msg);
     }
   //destroy_video_capture();
   // Make sure to shut everything down.

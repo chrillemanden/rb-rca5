@@ -28,7 +28,7 @@ void cameraCallback(ConstImageStampedPtr &msg) {
 
   std::size_t width = msg->image().width();
   std::size_t height = msg->image().height();
-  std::cout << "width: " << width << " height: " << height << std::endl;
+  //std::cout << "width: " << width << " height: " << height << std::endl;
   const char *data = msg->image().data().c_str();
   cv::Mat im(int(height), int(width), CV_8UC3, const_cast<char *>(data));
 
