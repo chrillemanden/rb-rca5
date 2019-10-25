@@ -69,8 +69,8 @@ int main(int _argc, char **_argv) {
 
     float speed = 0.0;
     float dir = 0.0;
-    goal_x = -20.0;
-    goal_y = -0.0;
+    goal_x = 2.0;
+    goal_y = 0.0;
 
     // Array that has direction and speed from control functions
     float arrSteer[2];
@@ -97,8 +97,11 @@ int main(int _argc, char **_argv) {
             simple_fuzzy_avoidance(arrSteer);
 
             // Get speed and direction from the control function
-            speed = arrSteer[0];
-            dir = arrSteer[1];
+            //speed = arrSteer[0];
+            //dir = arrSteer[1];
+
+            speed = 0.0;
+            dir = -0.1;
 
             tick--;
         }
