@@ -73,7 +73,7 @@ RuleBlock: mamdani
   implication: Minimum
   activation: General
 
-rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is backRight then mSteer is rightVeryBig
@@ -223,7 +223,7 @@ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_a
  rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftBig
  rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is farLeft then mSteer is forward
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is right
- rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farLeft then mSteer is RightBig
+ rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farLeft then mSteer is rightBig
  rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is farLeft then mSteer is leftBig
  rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftBig
@@ -268,11 +268,11 @@ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_a
  rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is backLeft then mSteer is leftBig
  rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is backLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is backLeft then mSteer is leftVeryBig
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is backLeft then mSte
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is backLeft then mSteer is leftVeryBig
 
+rule: if goal_angle is backRight then robot_speed is min
+rule: if goal_angle is backLeft then robot_speed is min
 
-#rule: if goal_angle is backRight then robot_speed is min
-#rule: if goal_angle is backLeft then robot_speed is min
 
   #First row in the rule base table - robot_speed
   rule: if obstacle_distance is veryClose and obstacle_angle is farLeft then robot_speed is min
