@@ -110,7 +110,7 @@ int main()
         std::cout << "X: " << XY_list[0][i] << " - Y: " << XY_list[1][i] << std::endl;
     }
 
-    vector<float> X_clusters = KMeansClustering(XY_list[0], 10, 10);
+    vector<float> X_clusters = KMeansClustering(XY_list[0], 8, 10);
     vector<float> Y_clusters = KMeansClustering(XY_list[1], 6, 10);
 
     cv::Mat maze_color;
@@ -118,9 +118,9 @@ int main()
 
 
 
-    /*//Draw vertical lines
-    cv::Mat maze_color;
-    cv::cvtColor(maze, maze_color, CV_GRAY2BGR);
+    //Draw vertical lines
+    //cv::Mat maze_color;
+    //cv::cvtColor(maze, maze_color, CV_GRAY2BGR);
     //std::cout << X_clusters.size() << std::endl;
 
     //Draw horisontal lines
@@ -168,7 +168,7 @@ int main()
     cv::namedWindow("Maze with grid", CV_WINDOW_NORMAL);
     cv::imshow("Maze with grid", maze_color);
 
-    std::cout << maze.cols << maze.rows << std::endl;*/
+    std::cout << maze.cols << maze.rows << std::endl;
 
     cv::waitKey(0);
 

@@ -52,7 +52,7 @@ void pre_processing(cv::Mat& inputImg, cv::Mat& outputImg)
     cv::Mat temp_img;
     equalize_luminance(inputImg, temp_img);
     cv::GaussianBlur(temp_img, temp_img, cv::Size(9,9), 2, 2);
-    cv::medianBlur(temp_img, temp_img, 3);
+    //cv::medianBlur(temp_img, temp_img, 3); //removed did not really do a difference
     outputImg = temp_img.clone();
 }
 
@@ -534,3 +534,45 @@ int main(int argc, char *argv[])
 
     return 1;
 }
+
+/*
+//use for generating images for the report.
+int main()
+{
+    //Load video
+    cv::VideoCapture cap("videoOuput.avi");
+    cv::VideoWriter video("processed_camera_output.avi", CV_FOURCC('M', 'J', 'P', 'G'), 10, cv::Size(320, 240));
+    cv::Mat camera_input;
+
+    if(cap.isOpened() == false)
+    {
+        std::cout << "Error opening video stream or file" << std::endl;
+        return -1;
+    }
+
+    cap >> camera_input; //Load individual frame
+
+    if(!cap.isOpened())
+    {
+        std::cout << "empty" << std::endl;
+        return -1;
+    }
+
+    pre_processing(camera_input, camera_input);
+    cv::namedWindow("camera input");
+    cv::imshow("camera input", camera_input);
+
+
+    std::vector<int> compression_params;
+    compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+    compression_params.push_back(9);
+
+    cv::imwrite("combined_cam_input.png", camera_input, compression_params);
+
+    cap.release();
+    video.release();
+
+    cv::waitKey(0);
+
+    return 1;
+}*/
