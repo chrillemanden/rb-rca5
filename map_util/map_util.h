@@ -41,6 +41,7 @@ void getGradientMap(cv::Mat& input, cv::Mat& output, std::vector<std::vector<int
 */
 void getWaypoints(cv::Mat& map, std::vector<cv::Point2i>& waypoints);
 
+void fillMapEdges(cv::Mat& map);
 
 bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2i point);
 

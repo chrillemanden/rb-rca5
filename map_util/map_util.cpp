@@ -546,10 +546,15 @@ void getGradientMap(cv::Mat& input, cv::Mat& output, std::vector<std::vector<int
 //std::vector<std::vector<int>>& vec
 void getWaypoints(cv::Mat& map, std::vector<cv::Point2i>& waypoints)
 {
+	// Fill the map edges
+	fillMapEdges(map);
+
 	cv::Mat gray;
 	cv::cvtColor(map, gray, cv::COLOR_BGR2GRAY);
 	cv::Mat white(map.rows, map.cols, CV_8UC1, cv::Scalar(255));
 	cv::Mat gradient_map = map.clone();
+
+	
 
 	std::vector<std::vector<int>> gradients(map.cols, std::vector<int>(map.rows, 0));
 	
@@ -603,6 +608,66 @@ void getWaypoints(cv::Mat& map, std::vector<cv::Point2i>& waypoints)
 	// Group the local maxima into waypoints
 	groupWaypoints(white, 20, 3, waypoints);
 
+}
+
+void fillMapEdges(cv::Mat& map)
+{
+	int col;
+
+	for (int row = 0; row < map.rows; row++)
+	{
+		col = -1;
+		// Check if next pixel is white
+		while (map.at<cv::Vec3b>(row, col + 1) == cv::Vec3b(255, 255, 255))
+		{
+			std::cout << "this is white" << std::endl;
+			std::cout << "row, col: (" << row << ", " << col + 1 << ")" << std::endl;
+			map.at<cv::Vec3b>(row, col + 1) = cv::Vec3b(0, 0, 0);
+			col++;
+		}
+	}
+
+	
+
+	
+	for (int row = 0; row < map.rows; row++)
+	{
+		col = map.cols;
+		// Check if next pixel is white
+		while (map.at<cv::Vec3b>(row, col - 1) == cv::Vec3b(255, 255, 255))
+		{
+			map.at<cv::Vec3b>(row, col - 1) = cv::Vec3b(0, 0, 0);
+			col--;
+		}
+	}
+
+	
+
+	int row;
+	for (col = 0; col < map.cols; col++)
+	{
+		row = -1;
+		// Check if next pixel is white
+		while (map.at<cv::Vec3b>(row + 1, col) == cv::Vec3b(255, 255, 255))
+		{
+			map.at<cv::Vec3b>(row + 1, col) = cv::Vec3b(0, 0, 0);
+			row++;
+		}
+	}
+
+	//row = map.rows;
+	for (col = 0; col < map.cols; col++)
+	{
+		row = map.rows;
+		// Check if next pixel is white
+		while (map.at<cv::Vec3b>(row - 1, col) == cv::Vec3b(255, 255, 255))
+		{
+			map.at<cv::Vec3b>(row - 1, col) = cv::Vec3b(0, 0, 0);
+			row--;
+		}
+	}
+
+	//showImage("Test", map);
 }
 
 bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2i point)
