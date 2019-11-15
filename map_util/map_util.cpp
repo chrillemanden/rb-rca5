@@ -543,12 +543,25 @@ void getGradientMap(cv::Mat& input, cv::Mat& output, std::vector<std::vector<int
 		}
 	}
 }
-
-void getWaypoints(cv::Mat& output, std::vector<std::vector<int>>& vec, std::vector<cv::Point2i> points)
+//std::vector<std::vector<int>>& vec
+void getWaypoints(cv::Mat& map, std::vector<cv::Point2i>& waypoints)
 {
-	for (int col = 1; col < output.cols - 1; col++)
+	cv::Mat gray;
+	cv::cvtColor(map, gray, cv::COLOR_BGR2GRAY);
+	cv::Mat white(map.rows, map.cols, CV_8UC1, cv::Scalar(255));
+	cv::Mat gradient_map = map.clone();
+
+	std::vector<std::vector<int>> gradients(map.cols, std::vector<int>(map.rows, 0));
+	
+	getGradientMap(gray, gradient_map, gradients);
+
+	std::vector<cv::Point2i> temp_waypoints;
+	cv::Mat map_waypoints(map.rows, map.cols, CV_8UC1, cv::Scalar(255));
+
+	// Find the local maxima in the gradient map
+	for (int col = 1; col < map.cols - 1; col++)
 	{
-		for (int row = 1; row < output.rows - 1; row++)
+		for (int row = 1; row < map.rows - 1; row++)
 		{
 			std::vector<int> comp;
 			//int curr_pixel = vec[row][col];
@@ -566,31 +579,30 @@ void getWaypoints(cv::Mat& output, std::vector<std::vector<int>>& vec, std::vect
 			//comp.push_back(vec[row + 1][col + 1]); // down right pixel
 			//comp.push_back(vec[row + 1][col - 1]); // down left pixel
 
-			comp.push_back(vec[col][row]); // curr_pixel
-			comp.push_back(vec[col][row - 1]); // left pixel
-			comp.push_back(vec[col][row + 1]); // right pixel
-			comp.push_back(vec[col - 1][row]); // up pixel
-			comp.push_back(vec[col + 1][row]); // down pixel
-			comp.push_back(vec[col - 1][row - 1]); // up left pixel
-			comp.push_back(vec[col - 1][row + 1]); // up right pixel
-			comp.push_back(vec[col + 1][row + 1]); // down right pixel
-			comp.push_back(vec[col + 1][row - 1]); // down left pixel
+			comp.push_back(gradients[col][row]); // curr_pixel
+			comp.push_back(gradients[col][row - 1]); // left pixel
+			comp.push_back(gradients[col][row + 1]); // right pixel
+			comp.push_back(gradients[col - 1][row]); // up pixel
+			comp.push_back(gradients[col + 1][row]); // down pixel
+			comp.push_back(gradients[col - 1][row - 1]); // up left pixel
+			comp.push_back(gradients[col - 1][row + 1]); // up right pixel
+			comp.push_back(gradients[col + 1][row + 1]); // down right pixel
+			comp.push_back(gradients[col + 1][row - 1]); // down left pixel
 
 			if (comp[0] == *std::max_element(comp.begin(), comp.end()) && comp[0] != 0 && comp[0] != 1)
 			{
 				// Colorize the output image
 				//output.at<cv::Vec3b>(row, col) = cv::Vec3b(0, 255, 0);
-				output.at<uchar>(row, col) = 0;
+				white.at<uchar>(row, col) = 0;
 				// Add to list of coordinates
-				points.push_back(cv::Point2i(row, col));
+				//temp_waypoints.push_back(cv::Point2i(row, col));
 			}
-
-			//int ul_pixel = (int)mat.at<uchar>(row - 1, col - 1);
-			//int ur_pixel = (int)mat.at<uchar>(row - 1, col + 1);
-			//int dr_pixel = (int)mat.at<uchar>(row + 1, col + 1);
-			//int dl_pixel = (int)mat.at<uchar>(row + 1, col - 1);
 		}
 	}
+
+	// Group the local maxima into waypoints
+	groupWaypoints(white, 20, 3, waypoints);
+
 }
 
 bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2i point)
@@ -735,10 +747,10 @@ void groupWaypointsOnce(cv::Mat input, int kernel_dim, std::vector<cv::Point2i> 
 
 }
 
-void findWaypointConnections(std::vector<cv::Point2i>& waypoints)
-{
-
-}
+//void findWaypointConnections(std::vector<cv::Point2i>& waypoints)
+//{
+//
+//}
 
 
 void createGridMap(cv::Mat& map, int grid_width, int grid_height, cv::Mat& grid, cv::Mat& map_grid_overlay)

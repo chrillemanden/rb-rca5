@@ -39,7 +39,7 @@ void getGradientMap(cv::Mat& input, cv::Mat& output, std::vector<std::vector<int
 	std::vector<std::vector<int>>& vec: An input vec with gradient values for the map
 	std::vector<cv::Point2i> points:	A vector where the waypoints are saved
 */
-void getWaypoints(cv::Mat& output, std::vector<std::vector<int>>& vec, std::vector<cv::Point2i> points);
+void getWaypoints(cv::Mat& map, std::vector<cv::Point2i>& waypoints);
 
 
 bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2i point);
@@ -50,6 +50,7 @@ bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2
 	Given a set of waypoints groups close waypoints into one waypoint 
 
 */
+
 void groupWaypoints(cv::Mat input, int max_iterations, int kernel_dim, std::vector<cv::Point2i>& new_waypoints);
 void groupWaypointsOnce(cv::Mat input, int kernel_dim, std::vector<cv::Point2i> & new_waypoints);
 
