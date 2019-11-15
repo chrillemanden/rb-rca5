@@ -519,7 +519,7 @@ void getGradientMap(cv::Mat& input, cv::Mat& output, std::vector<std::vector<int
 
 					if (col - (clearance_count + 1) < 0 || row - (clearance_count + 1) < 0)
 						break;
-					if (col + (clearance_count + 1) > input.cols || row - (clearance_count + 1) > input.rows)
+					if (col + (clearance_count + 1) > input.cols || row + (clearance_count + 1) > input.rows)
 						break;
 
 				}
@@ -593,112 +593,152 @@ void getWaypoints(cv::Mat& output, std::vector<std::vector<int>>& vec, std::vect
 	}
 }
 
-//void groupWaypoints(cv::Mat input, std::vector<cv::Point2i> new_waypoints)
-//{
-//	int max_radius = 5;
-//
-//	for (int col = 1; col < input.cols - 1; col++)
-//	{
-//		for (int row = 1; row < input.rows - 1; row++)
-//		{
-//			int curr_pixel = (int)input.at<uchar>(row, col);
-//
-//
-//			if (!curr_pixel) // Pixel is a point
-//			{
-//				// Lots of things to happen in here
-//				//std::cout << "This is white" << std::endl;
-//				int clearance_count = 1;
-//				bool obstacle = false;
-//
-//				int old_col = col;
-//				int old_row = row;
-//
-//				std::vector<int> disc_row;
-//				std::vector<int> disc_col;
-//
-//				disc_row.push_back(row);
-//				disc_row.push_back(col);
-//				//std::accumulate(disc_col.begin(), disc_col.end(), 0);
-//
-//				cv::Point2i result_pixel = cv::Point2i(0, 0);
-//				cv::Point2i curr_mean = cv::Point2i((int)(accumulate(disc_row.begin(), disc_row.end(), 0) / disc_row.size()), (int)(accumulate(disc_col.begin(), disc_col.end(), 0) / disc_col.size()));
-//				//std::cout << "row: " << row << " & col: " << col << std::endl;
-//
-//				bool space = true;
-//
-//				while (space && (clearance_count <= max_radius))
-//				{
-//
-//
-//					// Down and to the right
-//					for (int x = col - (clearance_count - 1); x < 2 * clearance_count + col - (clearance_count - 1); x++)
-//					{
-//						//std::cout << "Inside this for " << x << std::endl;
-//						if (!(int)input.at<uchar>(row + clearance_count, x))
-//						{
-//							disc_row.push_back(row + clearance_count);
-//							disc_col.push_back(x);
-//						}
-//
-//						//std::cout << "Down and to the right" << std::endl;
-//					}
-//					//std::cout << "Never here" << std::endl;
-//					// Right and up
-//					for (int y = row + (clearance_count - 1); y > row + (clearance_count - 1) - 2 * clearance_count; y--)
-//					{ // y = 1 + (1 - 1)  y > 1 + (1 - 1) - 2 * 1; y--
-//						if (!(int)input.at<uchar>(y, col + clearance_count))
-//						{
-//							disc_row.push_back(y);
-//							disc_col.push_back(col + clearance_count);
-//						}
-//						//std::cout << "Right and up" << std::endl;
-//					}
-//					// Up and to the left
-//					for (int x = col + (clearance_count - 1); x > col + (clearance_count - 1) - 2 * clearance_count; x--)
-//					{
-//						if (!(int)input.at<uchar>(row - clearance_count, x))
-//						{
-//							disc_row.push_back(row - clearance_count);
-//							disc_col.push_back(x);
-//							//std::cout << "Up and to the left" << std::endl;
-//						}
-//					}
-//					// Left and down
-//					for (int y = row - (clearance_count - 1); y < 2 * clearance_count + row - (clearance_count - 1); y++)
-//					{ // y = 1 - (1 - 1) ; y < 2 * 1 - 1 - (1 - 1)
-//						if (!(int)input.at<uchar>(y, col - clearance_count))
-//						{
-//							disc_row.push_back(y);
-//							disc_col.push_back(col - clearance_count);
-//						}
-//						//std::cout << "Left and down" << std::endl;
-//					}
-//					//std::cout << "Loop" << std::endl;
-//
-//					cv::Point2i new_mean = cv::Point2i((int)(accumulate(disc_row.begin(), disc_row.end(), 0) / disc_row.size()), (int)(accumulate(disc_col.begin(), disc_col.end(), 0) / disc_col.size()));
-//
-//					if (new_mean != curr_mean)
-//					{
-//						curr_mean = new_mean;
-//						clearance_count = 1;
-//						col = curr_mean.y;
-//						row = curr_mean.x;
-//					}
-//					else
-//					{
-//						clearance_count++;
-//					}
-//
-//
-//
-//				}
-//			}
-//
-//		}
-//	}
-//
-//}
+bool pointFound(std::vector<int> disc_row, std::vector<int> disc_col, cv::Point2i point)
+{
+	for (int i = 0; i < disc_row.size(); i++)
+	{
+		if (disc_row[i] == point.x && disc_col[i] == point.y)
+			return false;
+	}
+	return true;
+}
+
+void groupWaypoints(cv::Mat input, int max_iterations, int kernel_dim, std::vector<cv::Point2i>& new_waypoints)
+{
+	int n = 0;
+	// Make a white copy of the original 
+	cv::Mat white(input.rows, input.cols, CV_8UC1, cv::Scalar(255));
+	cv::Mat copy = input.clone();
+
+	while (n < max_iterations)
+	{
+		std::vector<cv::Point2i> grouped_waypoints;
+
+		groupWaypointsOnce(copy, kernel_dim, grouped_waypoints);
+		cv::Mat white(input.rows, input.cols, CV_8UC1, cv::Scalar(255));
+
+		for (auto& point : grouped_waypoints)
+		{
+			white.at<uchar>(point.x, point.y) = 0;
+			//std::cout << point << std::endl;
+			//white.at<cv::Vec3b>(point.x, point.y) = cv::Vec3b(127, 127, 127);
+			//img_only_reduced_waypoints.at<uchar>(point.x, point.y) = 0;
+		}
+
+		copy = white.clone();
+		new_waypoints = grouped_waypoints;
+		n++;
+	}
+
+	
+
+}
+
+void groupWaypointsOnce(cv::Mat input, int kernel_dim, std::vector<cv::Point2i> &new_waypoints)
+{
+	// Mat input is image with only waypoints
+	
+	int max_radius = kernel_dim;
+
+	for (int col = 1; col < input.cols - 1; col++)
+	{
+		for (int row = 1; row < input.rows - 1; row++)
+		{
+			int curr_pixel = (int)input.at<uchar>(row, col);
+
+
+			if (!curr_pixel) // Pixel is a point
+			{
+				// Lots of things to happen in here
+				
+				int clearance_count = 1;
+
+				std::vector<int> disc_row;
+				std::vector<int> disc_col;
+
+				disc_row.push_back(row);
+				disc_col.push_back(col);
+
+				//std::cout << "(row, col) = (" << row << ", " << col << ")" << std::endl;
+
+				while (clearance_count <= max_radius)
+				{
+					// Down and to the right
+					for (int x = col - (clearance_count - 1); x < 2 * clearance_count + col - (clearance_count - 1); x++)
+					{
+						if (!(int)input.at<uchar>(row + clearance_count, x))
+						{
+							disc_row.push_back(row + clearance_count);
+							disc_col.push_back(x);
+							
+						}
+					}
+					
+					// Right and up
+					for (int y = row + (clearance_count - 1); y > row + (clearance_count - 1) - 2 * clearance_count; y--)
+					{ 
+						if (!(int)input.at<uchar>(y, col + clearance_count))
+						{
+							disc_row.push_back(y);
+							disc_col.push_back(col + clearance_count);						
+						}
+					}
+
+					// Up and to the left
+					for (int x = col + (clearance_count - 1); x > col + (clearance_count - 1) - 2 * clearance_count; x--)
+					{
+						if (!(int)input.at<uchar>(row - clearance_count, x))
+						{
+							disc_row.push_back(row - clearance_count);
+							disc_col.push_back(x);
+						}
+					}
+
+					// Left and down
+					for (int y = row - (clearance_count - 1); y < 2 * clearance_count + row - (clearance_count - 1); y++)
+					{ // y = 1 - (1 - 1) ; y < 2 * 1 - 1 - (1 - 1)
+						if (!(int)input.at<uchar>(y, col - clearance_count))
+						{
+							disc_row.push_back(y);
+							disc_col.push_back(col - clearance_count);
+						}
+					}
+
+					
+					clearance_count++;
+					//std::cout << "clearance_count: " << clearance_count << std::endl;
+
+					if (col - (clearance_count + 1) < 0 || row - (clearance_count + 1) < 0)
+					{
+						//std::cout << "Break out" << std::endl;
+						
+						break;
+					}
+					if (col + (clearance_count + 1) > input.cols || row + (clearance_count + 1) > input.rows)
+					{
+						//std::cout << "Break out" << std::endl;
+						break;
+					}
+
+				}
+
+				//std::cout << "Disc row size: " << disc_row.size() << std::endl;
+
+				// Add the new grouped waypoint
+				cv::Point2i new_mean = cv::Point2i((int)(accumulate(disc_row.begin(), disc_row.end(), 0) / disc_row.size()), (int)(accumulate(disc_col.begin(), disc_col.end(), 0) / disc_col.size()));
+				new_waypoints.push_back(new_mean);
+				
+			}
+
+		}
+	}
+
+}
+
+void findWaypointConnections(std::vector<cv::Point2i>& waypoints)
+{
+
+}
 
 
 void createGridMap(cv::Mat& map, int grid_width, int grid_height, cv::Mat& grid, cv::Mat& map_grid_overlay)
