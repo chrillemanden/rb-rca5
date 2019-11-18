@@ -3,7 +3,7 @@
 
 #include <vector>
 
-extern std::vector<double> lidar_data;
+//extern std::vector<double> lidar_data;
 
 
 void simpleLidarCallback(ConstLaserScanStampedPtr &msg);

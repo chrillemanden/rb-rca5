@@ -4,6 +4,8 @@
 
 using namespace std;
 
+extern std::vector<double> lidar_data;
+
 
 std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, double orientation)
 {
@@ -22,7 +24,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
 
 
         double cur_angle = orientation + angle_inc * (double) i;
-        double max_laser_legth = 10.0 * 6.0; //6 is scalling factor.
+        double max_laser_legth = 10.0 * 12.0; //6 is scalling factor.
         double cur_x = x_pos + max_laser_legth * cos(cur_angle);
         double cur_y = y_pos - max_laser_legth * sin(cur_angle);
 
@@ -46,7 +48,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
                 //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,0,255), -1);
                 //cout << "found black pixel at j - " << j << endl;
                 double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
-                lidar_ouput.push_back(distance/6.0); //missing unit
+                lidar_ouput.push_back(distance/12.0); //missing unit
                 break;
             }
 
@@ -55,7 +57,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
             {
                 //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,255,0), -1);
                 double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
-                lidar_ouput.push_back(distance/6.0); //missing unit
+                lidar_ouput.push_back(distance/12.0); //missing unit
                 break;
             }
 
@@ -70,12 +72,16 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
 
 }
 
-double error_lidar(std::vector<double> measured_data, std::vector<double> calculated_data)
+double error_lidar(std::vector<double> calculated_data)
 {
+    //std::cout << "Size of lidar data (in emulator): " << lidar_data.size() << std::endl;
+    //std::cout << "Size of lidar data (input function in emulator: " << measured_data.size() << std::endl;
+
     double sum_error = 0;
-    for(unsigned int i = 0; i < measured_data.size(); i++)
+    for(unsigned int i = 0; i < lidar_data.size(); i++)
     {
-        double diff = measured_data[i] - calculated_data[i];
+        //std::cout << "iteration: " << i << " - Length robot ray: " << lidar_data[i] << " - Length particle ray: " << calculated_data[i] << std::endl;
+        double diff = lidar_data[i] - calculated_data[i];
         double sq_error = pow(diff, 2.0);
 
         sum_error = sum_error + sq_error;

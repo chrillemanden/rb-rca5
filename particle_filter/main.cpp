@@ -28,8 +28,8 @@ double global_angle;
 double global_goal_angle;
 
 std::default_random_engine da_generator;
-std::vector<double> lidar_data;
-
+std::vector<double> lidar_data(200, 0.0);
+extern double first_data_point;
 
 int main(int _argc, char **_argv) {
 
@@ -79,7 +79,7 @@ int main(int _argc, char **_argv) {
     float speed = 0.0;
     float dir = 0.0;
     goal_x = 35.0;
-    goal_y = 0.0;
+    goal_y = 2.0;
 
     // Array that has direction and speed from control functions
     float arrSteer[2];
@@ -88,10 +88,10 @@ int main(int _argc, char **_argv) {
 
     //Generate initial particles
     cv::Mat map = cv::imread("floor_plan.png");
-    cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
+    cv::resize(map, map, cv::Size(), 12, 12, cv::INTER_AREA);
 
     std::vector<Particle> particles;
-    initParticles(map, 300, particles);
+    initParticles(map, 100, particles);
 
     int iteration = 0;
     //init_video_capture();
@@ -113,26 +113,31 @@ int main(int _argc, char **_argv) {
             simple_fuzzy_avoidance(arrSteer);
 
             // Get speed and direction from the control function
-            speed = arrSteer[0]*0.5;
+            speed = arrSteer[0]*0.8;
             dir = arrSteer[1];
 
-            //speed = 0.2;
+            //speed = 0.0;
             //dir = 0.0;
 
-            predictParticles(map, particles, speed, dir);
+            predictParticles(map, particles, speed*3, dir);
+
+            //std::cout << "Size of lidar data (in main): " << lidar_data.size() << std::endl;
+            //std::cout << "Global angle: " << global_goal_angle << std::endl;
+            //std::cout << "First data point: " << first_data_point << std::endl;
+            //std::cout << "First data point from main: " << lidar_data[0] << std::endl;
 
             for (auto & p : particles)
             {
-                p.weight = error_lidar(lidar_data, emulate_lidar_ouput(map, p.col, p.row, p.orientation));
+                p.weight = error_lidar(emulate_lidar_ouput(map, p.col, p.row, p.orientation));
 
             }
             normaliseWeights(particles);
 
             resampleParticles(particles);
 
-            std::cout << "Particles size: " << particles.size() << std::endl;
-            std::cout << "Iteration number" << iteration++ << std::endl;
-            std::cout << "Particle[0]: " << particles[0].col << ", row: " << particles[0].row << std::endl;
+            //std::cout << "Particles size: " << particles.size() << std::endl;
+            //std::cout << "Iteration number" << iteration++ << std::endl;
+            //std::cout << "Particle[0]: " << particles[0].col << ", row: " << particles[0].row << std::endl;
 
             cv::Mat map_particles = map.clone();
             for (auto & p : particles)

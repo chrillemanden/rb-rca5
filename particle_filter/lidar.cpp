@@ -17,6 +17,9 @@ extern int tick;
 
 static boost::mutex da_mutex; //Maybe add extern
 
+extern std::vector<double> lidar_data;
+double first_data_point;
+
 
 void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
 {
@@ -50,7 +53,13 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
         temp_lidar_data.push_back(msg->scan().ranges(i));
     }
 
-    lidar_data = temp_lidar_data;
+    da_mutex.lock();
+
+    lidar_data = std::move(temp_lidar_data);
+    first_data_point = lidar_data[0];
+    da_mutex.unlock();
+
+    std::cout << "Size of lidar data (inside callback): " << lidar_data.size() << std::endl;
 
     //std::cout << "Size of new range: " << half_circle_range.size() << std::endl;
     double min_dist = *std::min_element(half_circle_range.begin(), half_circle_range.end());

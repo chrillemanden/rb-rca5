@@ -19,13 +19,13 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-    //std::uniform_real_distribution<double> width_distr((map.cols-20.0)/2.0, (map.cols + 20)/2.0);
-    //std::uniform_real_distribution<double> height_distr((map.rows-20.0) / 2.0, (map.rows + 20.0) / 2.0);
-    std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
-    std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
-    std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
+    std::uniform_real_distribution<double> width_distr((map.cols-140.0)/2.0, (map.cols + 140)/2.0);
+    std::uniform_real_distribution<double> height_distr((map.rows-140.0) / 2.0, (map.rows + 140.0) / 2.0);
+    //std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
+    //std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
+    //std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
     //std::uniform_real_distribution<double> orientation_distr(-0.002 + 0.5 * 3.14, 0.002 + 0.5 * 3.14);
-    //std::uniform_real_distribution<double> orientation_distr(-0.002, 0.002);
+    std::uniform_real_distribution<double> orientation_distr(-0.002, 0.002);
 
 	for (int i = 0; i < N; i++)
 	{
@@ -40,6 +40,7 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 		}
 
         particles.push_back(Particle(row, col, orientation_distr(generator)));
+        //particles.push_back(Particle(map.rows/2, map.cols/2, 0));
 	}
 }
 
@@ -50,13 +51,13 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 	// Translation is a distance moved
 
     //std::default_random_engine generator;
-    std::normal_distribution<double> trans_distr(0, 0.2);
+    std::normal_distribution<double> trans_distr(0.3, 2);
     std::normal_distribution<double> ori_distr(0, 0.2);
 
 
 	for (auto& p : particles)
     {
-        double max_noise = 0.2;
+        double max_noise = 0.6;
         double noise = trans_distr(da_generator);
         if (noise > max_noise)
         {
