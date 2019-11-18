@@ -1,12 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <opencv2/opencv.hpp>
-#include "emulated_lidar_scanner.cpp"
 
 using namespace std;
 
 
-/*std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, double orientation)
+std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, double orientation)
 {
     cv::Mat map_clone = map.clone();
     std::vector<double> lidar_ouput = {};
@@ -116,27 +115,4 @@ void plot_lidar_input(std::vector<double> lidar_input)
 
      cv::imshow("lidar", im);
      cv::waitKey(0);
-}
-*/
-int main()
-{
-    int scaling_factor = 6;
-    cv::Mat map = cv::imread("floor_plan.png", cv::IMREAD_COLOR);
-    cv::resize(map, map, cv::Size(), scaling_factor, scaling_factor, cv::INTER_AREA);
-    cv::circle(map, cv::Point2i(27*scaling_factor,20*scaling_factor), 2, cv::Scalar(255,0,0), -1);
-
-
-    std::vector<double> lidar_data = emulate_lidar_ouput(map, 27 * scaling_factor, 20 * scaling_factor, 0);
-    cv::imshow("map", map);
-    for(int i = 0; i < lidar_data.size(); i++)
-    {
-        cout << lidar_data[i] << " - " ;
-    }
-
-    plot_lidar_input(lidar_data);
-
-    //cv::imshow("lidar", map);
-    //cv::waitKey(0);
-    cout << "Hello World!" << endl;
-    return 0;
 }
