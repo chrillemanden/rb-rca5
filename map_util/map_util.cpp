@@ -620,8 +620,8 @@ void fillMapEdges(cv::Mat& map)
 		// Check if next pixel is white
 		while (map.at<cv::Vec3b>(row, col + 1) == cv::Vec3b(255, 255, 255))
 		{
-			std::cout << "this is white" << std::endl;
-			std::cout << "row, col: (" << row << ", " << col + 1 << ")" << std::endl;
+            //std::cout << "this is white" << std::endl;
+            //std::cout << "row, col: (" << row << ", " << col + 1 << ")" << std::endl;
 			map.at<cv::Vec3b>(row, col + 1) = cv::Vec3b(0, 0, 0);
 			col++;
 		}

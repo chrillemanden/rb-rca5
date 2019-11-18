@@ -87,7 +87,7 @@
       <box>
         <size>65 45 0.01</size>
       </box>
-      <model_count>20</model_count>
+      <model_count>0</model_count>
       <distribution>
         <type>random</type>
       </distribution>

@@ -29,11 +29,11 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
         cv::Point2i laser_end_point = cv::Point2i((int) cur_x, (int) cur_y);
 
         //cv::circle(map, laser_end_point, 6, cv::Scalar(255,0,0), -1);
-        std::cout << "start_point - " << robot_point << " endpoint - " << laser_end_point << std::endl;
+        //std::cout << "start_point - " << robot_point << " endpoint - " << laser_end_point << std::endl;
 
         cv::LineIterator line_it(map, robot_point, laser_end_point, 8);
 
-        std:cout << "length line - " << line_it.count << std::endl;
+        //std:cout << "length line - " << line_it.count << std::endl;
 
         for(int j = 0; j < line_it.count; line_it++, j++)
         {
@@ -43,8 +43,8 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
             //if(pixel_val == cv::Vec3b(0,0,0));
             if(pixel_val.val[0] == 0 && pixel_val.val[1] == 0 && pixel_val.val[2] == 0)
             {
-                cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,0,255), -1);
-                cout << "found black pixel at j - " << j << endl;
+                //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,0,255), -1);
+                //cout << "found black pixel at j - " << j << endl;
                 double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
                 lidar_ouput.push_back(distance/6.0); //missing unit
                 break;
@@ -53,7 +53,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
             //store the connection if no wall pixels is encountered along the length of line
             if(j + 1 == line_it.count)
             {
-                cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,255,0), -1);
+                //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,255,0), -1);
                 double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
                 lidar_ouput.push_back(distance/6.0); //missing unit
                 break;
@@ -63,9 +63,9 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
 
 
     }
-    cv::imshow("Found points", map_clone);
-    cv::waitKey(0);
-    std::cout << "Length lidar length " << lidar_ouput.size() << std::endl;
+    //cv::imshow("Found points", map_clone);
+    //cv::waitKey(0);
+    //std::cout << "Length lidar length " << lidar_ouput.size() << std::endl;
     return lidar_ouput;
 
 }
@@ -80,7 +80,7 @@ double error_lidar(std::vector<double> measured_data, std::vector<double> calcul
 
         sum_error = sum_error + sq_error;
     }
-    return sum_error;
+    return 1.0/sum_error;
 }
 
 

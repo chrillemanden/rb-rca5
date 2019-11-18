@@ -10,8 +10,8 @@
 //#include <boost/math/constants/constants.hpp>
 
 
-#include "localize.h"
-#include "map_util.h"
+#include "../localization/localize.h"
+#include "../map_util/map_util.h"
 
 void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 {
@@ -19,9 +19,10 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-	std::uniform_int_distribution<int> width_distr(0, map.cols - 1);
-	std::uniform_int_distribution<int> height_distr(0, map.rows - 1);
-	std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
+    std::uniform_int_distribution<int> width_distr((map.cols-20)/2, (map.cols + 20)/2);
+    std::uniform_int_distribution<int> height_distr((map.rows-20) / 2, (map.rows + 20) / 2);
+    std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
+    //std::uniform_real_distribution<double> orientation_distr(-0.2, 0.2);
 
 	for (int i = 0; i < N; i++)
 	{
@@ -45,39 +46,44 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 	// Add noise to the updates as well
 	// Translation is a distance moved
 
-	std::default_random_engine generator;
-	std::normal_distribution<double> trans_distr(0, 1.0);
-	std::normal_distribution<double> ori_distr(0, 0.5);
+    //std::default_random_engine generator;
+    std::normal_distribution<double> trans_distr(0, 0.2);
+    std::normal_distribution<double> ori_distr(0, 0.1);
 
 
 	for (auto& p : particles)
 	{
-		int trans_row = p.row + sin(p.orientation) * -(translation + trans_distr(generator));
-		int trans_col = p.col + cos(p.orientation) * (translation + trans_distr(generator));
+        int trans_row = p.row + sin(p.orientation) * (translation + trans_distr(da_generator));
+        int trans_col = p.col + cos(p.orientation) * (translation + trans_distr(da_generator));
 
 		//cv::Point2i translated = cv::Point2i(point.col + cos(point.orientation) * 10, point.row + sin(point.orientation) * -10);
 	
-		cv::LineIterator line_it(map, cv::Point2i(p.col, p.row), cv::Point2i(trans_col, trans_row));
+//		cv::LineIterator line_it(map, cv::Point2i(p.col, p.row), cv::Point2i(trans_col, trans_row));
 
-		bool valid_action = true;
-		for (int k = 0; k < line_it.count; line_it++, k++)
-		{
-			if (map.at<cv::Vec3b>(line_it.pos()) == cv::Vec3b(0, 0, 0))
-			{
-				valid_action = false;
-			}
-		}
+//		bool valid_action = true;
+//		for (int k = 0; k < line_it.count; line_it++, k++)
+//		{
+//			if (map.at<cv::Vec3b>(line_it.pos()) == cv::Vec3b(0, 0, 0))
+//			{
+//				valid_action = false;
+//			}
+//		}
 
-		if (valid_action)
-		{
-			p.row = trans_row;
-			p.col = trans_col;
-			p.orientation += rotation + ori_distr(generator);
-		}
-		else
-		{
-			p.weight = 0;
-		}
+        p.row = trans_row;
+        p.col = trans_col;
+        p.orientation += rotation + ori_distr(da_generator);
+
+//		if (valid_action)
+//		{
+//			p.row = trans_row;
+//			p.col = trans_col;
+//			p.orientation += rotation + ori_distr(generator);
+//		}
+//		else
+//		{
+//			p.weight = 0;
+//            p.orientation += rotation + ori_distr(generator);
+//		}
 
 	}
 	
