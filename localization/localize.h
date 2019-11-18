@@ -8,8 +8,8 @@ extern std::default_random_engine da_generator;
 class Particle
 {
 public:
-	int row;
-	int col;
+    double row;
+    double col;
 	double orientation;
 	double weight;
 

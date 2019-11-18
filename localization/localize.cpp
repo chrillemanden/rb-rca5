@@ -19,10 +19,13 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-    std::uniform_int_distribution<int> width_distr((map.cols-20)/2, (map.cols + 20)/2);
-    std::uniform_int_distribution<int> height_distr((map.rows-20) / 2, (map.rows + 20) / 2);
+    //std::uniform_real_distribution<double> width_distr((map.cols-20.0)/2.0, (map.cols + 20)/2.0);
+    //std::uniform_real_distribution<double> height_distr((map.rows-20.0) / 2.0, (map.rows + 20.0) / 2.0);
+    std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
+    std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
     std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
-    //std::uniform_real_distribution<double> orientation_distr(-0.2, 0.2);
+    //std::uniform_real_distribution<double> orientation_distr(-0.002 + 0.5 * 3.14, 0.002 + 0.5 * 3.14);
+    //std::uniform_real_distribution<double> orientation_distr(-0.002, 0.002);
 
 	for (int i = 0; i < N; i++)
 	{
@@ -36,7 +39,7 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 			continue;
 		}
 
-		particles.push_back(Particle(row, col, orientation_distr(generator)));
+        particles.push_back(Particle(row, col, orientation_distr(generator)));
 	}
 }
 
@@ -48,42 +51,53 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 
     //std::default_random_engine generator;
     std::normal_distribution<double> trans_distr(0, 0.2);
-    std::normal_distribution<double> ori_distr(0, 0.1);
+    std::normal_distribution<double> ori_distr(0, 0.2);
 
 
 	for (auto& p : particles)
-	{
-        int trans_row = p.row + sin(p.orientation) * (translation + trans_distr(da_generator));
-        int trans_col = p.col + cos(p.orientation) * (translation + trans_distr(da_generator));
+    {
+        double max_noise = 0.2;
+        double noise = trans_distr(da_generator);
+        if (noise > max_noise)
+        {
+            noise = max_noise;
+        }
+        else if (noise < -max_noise)
+        {
+            noise = -max_noise;
+        }
+        double trans_col = p.col + cos(p.orientation) * (translation + noise);
+        double trans_row = p.row - sin(p.orientation) * (translation + noise);
 
 		//cv::Point2i translated = cv::Point2i(point.col + cos(point.orientation) * 10, point.row + sin(point.orientation) * -10);
 	
-//		cv::LineIterator line_it(map, cv::Point2i(p.col, p.row), cv::Point2i(trans_col, trans_row));
+        cv::LineIterator line_it(map, cv::Point2i(p.col, p.row), cv::Point2i(trans_col, trans_row));
 
-//		bool valid_action = true;
-//		for (int k = 0; k < line_it.count; line_it++, k++)
-//		{
-//			if (map.at<cv::Vec3b>(line_it.pos()) == cv::Vec3b(0, 0, 0))
-//			{
-//				valid_action = false;
-//			}
-//		}
+        bool valid_action = true;
+        for (int k = 0; k < line_it.count; line_it++, k++)
+        {
+            if (map.at<cv::Vec3b>(line_it.pos()) == cv::Vec3b(0, 0, 0))
+            {
+                valid_action = false;
+            }
+        }
 
-        p.row = trans_row;
-        p.col = trans_col;
-        p.orientation += rotation + ori_distr(da_generator);
+//        p.row = trans_row;
+//        p.col = trans_col;
+//        p.orientation += rotation + ori_distr(da_generator);
 
-//		if (valid_action)
-//		{
-//			p.row = trans_row;
-//			p.col = trans_col;
-//			p.orientation += rotation + ori_distr(generator);
-//		}
-//		else
-//		{
-//			p.weight = 0;
-//            p.orientation += rotation + ori_distr(generator);
-//		}
+
+        if (valid_action)
+        {
+            p.row = trans_row;
+            p.col = trans_col;
+            p.orientation += rotation + ori_distr(da_generator);
+        }
+        else
+        {
+            p.weight = 0;
+            p.orientation += rotation + ori_distr(da_generator);
+        }
 
 	}
 	
@@ -131,7 +145,7 @@ void resampleParticles(std::vector<Particle>& particles)
 	
 	int n = new_particles.size();
 
-	std::uniform_int_distribution<int> index_distr(0, particles.size());
+    std::uniform_int_distribution<int> index_distr(0, particles.size()-1);
 
 	// Fill in the remaining particles
 	for (int i = 0; i < particles.size() - n; i++)

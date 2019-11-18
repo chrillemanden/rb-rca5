@@ -91,7 +91,7 @@ int main(int _argc, char **_argv) {
     cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
 
     std::vector<Particle> particles;
-    initParticles(map, 200, particles);
+    initParticles(map, 300, particles);
 
     int iteration = 0;
     //init_video_capture();
@@ -113,17 +113,17 @@ int main(int _argc, char **_argv) {
             simple_fuzzy_avoidance(arrSteer);
 
             // Get speed and direction from the control function
-            speed = arrSteer[0];
+            speed = arrSteer[0]*0.5;
             dir = arrSteer[1];
 
-            //speed = 0.0;
-            //dir = -0.1;
+            //speed = 0.2;
+            //dir = 0.0;
 
             predictParticles(map, particles, speed, dir);
 
             for (auto & p : particles)
             {
-                p.weight = error_lidar(lidar_data, emulate_lidar_ouput(map, p.row, p.col, p.orientation));
+                p.weight = error_lidar(lidar_data, emulate_lidar_ouput(map, p.col, p.row, p.orientation));
 
             }
             normaliseWeights(particles);
@@ -132,11 +132,12 @@ int main(int _argc, char **_argv) {
 
             std::cout << "Particles size: " << particles.size() << std::endl;
             std::cout << "Iteration number" << iteration++ << std::endl;
+            std::cout << "Particle[0]: " << particles[0].col << ", row: " << particles[0].row << std::endl;
 
             cv::Mat map_particles = map.clone();
             for (auto & p : particles)
             {
-                cv::circle(map_particles, cv::Point2i(p.col,p.row), 2, cv::Scalar(0,127,0), 2, 8);
+                cv::circle(map_particles, cv::Point2i((int)p.col,(int)p.row), 2, cv::Scalar(0,127,0), 2, 8);
             }
 
             showImage("Particles", map_particles);
