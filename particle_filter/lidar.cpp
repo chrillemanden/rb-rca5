@@ -59,7 +59,14 @@ void simpleLidarCallback(ConstLaserScanStampedPtr &msg)
     first_data_point = lidar_data[0];
     da_mutex.unlock();
 
-    std::cout << "Size of lidar data (inside callback): " << lidar_data.size() << std::endl;
+    /*std::cout << "Size of lidar data (inside callback): " << lidar_data.size() << std::endl;
+
+    for(int i = 0; i < lidar_data.size(); i++)
+    {
+        std::cout << lidar_data[i] << std::endl;
+    }*/
+
+    //cv::waitKey(0);
 
     //std::cout << "Size of new range: " << half_circle_range.size() << std::endl;
     double min_dist = *std::min_element(half_circle_range.begin(), half_circle_range.end());

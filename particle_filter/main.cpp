@@ -88,7 +88,7 @@ int main(int _argc, char **_argv) {
 
     //Generate initial particles
     cv::Mat map = cv::imread("floor_plan.png");
-    cv::resize(map, map, cv::Size(), 12, 12, cv::INTER_AREA);
+    cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
 
     std::vector<Particle> particles;
     initParticles(map, 100, particles);
@@ -113,13 +113,13 @@ int main(int _argc, char **_argv) {
             simple_fuzzy_avoidance(arrSteer);
 
             // Get speed and direction from the control function
-            speed = arrSteer[0]*0.8;
+            speed = arrSteer[0];
             dir = arrSteer[1];
 
             //speed = 0.0;
             //dir = 0.0;
 
-            predictParticles(map, particles, speed*3, dir);
+            predictParticles(map, particles, speed, dir); //speed*3
 
             //std::cout << "Size of lidar data (in main): " << lidar_data.size() << std::endl;
             //std::cout << "Global angle: " << global_goal_angle << std::endl;

@@ -122,15 +122,18 @@ int main()
 {
     int scaling_factor = 6;
     cv::Mat map = cv::imread("floor_plan.png", cv::IMREAD_COLOR);
-    cv::resize(map, map, cv::Size(), scaling_factor, scaling_factor, cv::INTER_AREA);
-    cv::circle(map, cv::Point2i(27*scaling_factor,20*scaling_factor), 2, cv::Scalar(255,0,0), -1);
+    cv::resize(map, map, cv::Size(0,0), scaling_factor, scaling_factor, cv::INTER_AREA);
 
 
-    std::vector<double> lidar_data = emulate_lidar_ouput(map, 27 * scaling_factor, 20 * scaling_factor, 0);
+    int x_cor = map.cols/2+150;
+    int y_cor = map.rows/2;
+    cv::circle(map, cv::Point2i(x_cor, y_cor), 2, cv::Scalar(255,0,0), -1);
+
+    std::vector<double> lidar_data = emulate_lidar_ouput(map, x_cor, y_cor, 0);
     cv::imshow("map", map);
     for(int i = 0; i < lidar_data.size(); i++)
     {
-        cout << lidar_data[i] << " - " ;
+        cout << lidar_data[i] << std::endl;
     }
 
     plot_lidar_input(lidar_data);

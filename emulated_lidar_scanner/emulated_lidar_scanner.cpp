@@ -24,7 +24,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
 
 
         double cur_angle = orientation + angle_inc * (double) i;
-        double max_laser_legth = 10.0 * 12.0; //6 is scalling factor.
+        double max_laser_legth = 10.0*8.5036; //* 12.0; //6 is scalling factor.
         double cur_x = x_pos + max_laser_legth * cos(cur_angle);
         double cur_y = y_pos - max_laser_legth * sin(cur_angle);
 
@@ -47,8 +47,8 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
             {
                 //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,0,255), -1);
                 //cout << "found black pixel at j - " << j << endl;
-                double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
-                lidar_ouput.push_back(distance/12.0); //missing unit
+                double distance = sqrt(pow((line_it.pos().x-robot_point.x), 2.0)+pow((line_it.pos().y-robot_point.y), 2.0));
+                lidar_ouput.push_back(distance/8.5036); //missing unit
                 break;
             }
 
@@ -57,7 +57,7 @@ std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, doub
             {
                 //cv::circle(map_clone, line_it.pos(), 2, cv::Scalar(0,255,0), -1);
                 double distance = sqrt(pow(line_it.pos().x-robot_point.x, 2.0)+pow(line_it.pos().y-robot_point.y, 2.0));
-                lidar_ouput.push_back(distance/12.0); //missing unit
+                lidar_ouput.push_back(distance/8.5036); //missing unit
                 break;
             }
 
@@ -81,7 +81,16 @@ double error_lidar(std::vector<double> calculated_data)
     for(unsigned int i = 0; i < lidar_data.size(); i++)
     {
         //std::cout << "iteration: " << i << " - Length robot ray: " << lidar_data[i] << " - Length particle ray: " << calculated_data[i] << std::endl;
-        double diff = lidar_data[i] - calculated_data[i];
+        double mes_data;
+        if(lidar_data[i] > 10.0)
+        {
+            mes_data = 10.0;
+        }
+        else
+        {
+            mes_data = lidar_data[i];
+        }
+        double diff = mes_data - calculated_data[i];
         double sq_error = pow(diff, 2.0);
 
         sum_error = sum_error + sq_error;
@@ -92,7 +101,7 @@ double error_lidar(std::vector<double> calculated_data)
 
 void plot_lidar_input(std::vector<double> lidar_input)
 {
-    float angle_min = 2.268899;
+    float angle_min = -2.268899;
     float angle_increment = (2.0 * 2.268899)/200.0;
     float range_min = 0.08;
     double range_max = 10.0;
