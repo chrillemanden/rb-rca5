@@ -31,6 +31,7 @@ std::default_random_engine da_generator;
 std::vector<double> lidar_data(200, 0.0);
 extern double first_data_point;
 
+
 int main(int _argc, char **_argv) {
 
   //init_gazebo();
@@ -104,12 +105,12 @@ int main(int _argc, char **_argv) {
         int key = cv::waitKey(1);
         da_mutex.unlock();
 
-        if(key == key_left)
+        /*if(key == key_left)
         {
             break;
         }
         if(tick > 0)
-        {
+        {*/
             simple_fuzzy_avoidance(arrSteer);
 
             // Get speed and direction from the control function
@@ -147,11 +148,11 @@ int main(int _argc, char **_argv) {
 
             showImage("Particles", map_particles);
 
-            tick--;
+            //tick--;
 
 
 
-        }
+       // }
 
         // Generate a pose
         ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));

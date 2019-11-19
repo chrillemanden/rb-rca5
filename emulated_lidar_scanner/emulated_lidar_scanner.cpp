@@ -1,10 +1,20 @@
 #include <iostream>
 #include <vector>
+#include <boost/signals2/mutex.hpp>
+#include <gazebo/gazebo_client.hh>
+#include <gazebo/msgs/msgs.hh>
+#include <gazebo/transport/transport.hh>
+#include "fl/Headers.h"
+#include <boost/math/constants/constants.hpp>
 #include <opencv2/opencv.hpp>
+
+
+#include <random>
 
 using namespace std;
 
 extern std::vector<double> lidar_data;
+static boost::mutex da_mutex;
 
 
 std::vector<double> emulate_lidar_ouput(cv::Mat& map, int x_pos, int y_pos, double orientation)
@@ -78,23 +88,30 @@ double error_lidar(std::vector<double> calculated_data)
     //std::cout << "Size of lidar data (input function in emulator: " << measured_data.size() << std::endl;
 
     double sum_error = 0;
-    for(unsigned int i = 0; i < lidar_data.size(); i++)
+    da_mutex.lock();
+    std::vector<double> copy_lidar_data = lidar_data;
+    da_mutex.unlock();
+    for(unsigned int i = 0; i < copy_lidar_data.size(); i++)
     {
         //std::cout << "iteration: " << i << " - Length robot ray: " << lidar_data[i] << " - Length particle ray: " << calculated_data[i] << std::endl;
-        double mes_data;
-        if(lidar_data[i] > 10.0)
+
+        double mes_data = std::min(copy_lidar_data[i], 10.0);
+
+
+        /*if(lidar_data[i] > 10.0)
         {
             mes_data = 10.0;
         }
         else
         {
             mes_data = lidar_data[i];
-        }
+        }*/
         double diff = mes_data - calculated_data[i];
         double sq_error = pow(diff, 2.0);
 
         sum_error = sum_error + sq_error;
     }
+    //da_mutex.unlock();
     return 1.0/sum_error;
 }
 
