@@ -14,14 +14,34 @@
 #include <random>
 #include <cstdlib>
 #include <stdint.h>
+#include <math.h>
 
 #include "map_util.h"
 
+extern double gaz_x_pos;
+extern double gaz_y_pos;
+extern double map_pixel_width;
+extern double map_pixel_height;
 
 void showImage(std::string image_name, cv::Mat mat)
 {
 	cv::namedWindow(image_name, cv::WINDOW_NORMAL);
 	imshow(image_name, mat);
+}
+
+
+bool nearTargetWaypoint(cv::Point2i targetWaypoint, double radius = 5.0)
+{
+    double g_x = gaz_x_pos;
+    double g_y = gaz_y_pos;
+
+    double t_x = targetWaypoint.x - map_pixel_width;
+    double t_y = targetWaypoint.y - map_pixel_height;
+
+    double dist = sqrt(pow(t_x-gaz_x_pos,2)+pow(t_y-gaz_y_pos,2));
+
+    return (dist <= radius) ? true : false;
+
 }
 
 void getCorners(cv::Mat& mat, std::vector<cv::Point2i>& corners)
@@ -34,7 +54,7 @@ void getCorners(cv::Mat& mat, std::vector<cv::Point2i>& corners)
 
 			//std::cout << (int)mat.at<uchar>(row, col) << " ";
 
-			/* If white then not a corner */
+            /* If white then not a corner */
 			if (curr_pixel)
 				continue;
 
@@ -133,6 +153,8 @@ void getCorners(cv::Mat& mat, std::vector<cv::Point2i>& corners)
 
 	}
 }
+
+
 
 
 void getGridIntersections(cv::Mat& mat, std::vector<cv::Point2i>& corners)

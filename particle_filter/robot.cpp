@@ -13,6 +13,9 @@
 extern double goal_x;
 extern double goal_y;
 
+extern double gaz_x_pos;
+extern double gaz_y_pos;
+
 extern double global_goal_angle;
 
 const double pi = boost::math::constants::pi<double>();

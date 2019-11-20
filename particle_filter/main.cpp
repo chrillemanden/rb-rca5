@@ -26,6 +26,11 @@ double goal_y;
 double global_minDist;
 double global_angle;
 double global_goal_angle;
+double gaz_x_pos;
+double gaz_y_pos;
+double map_pixel_width;
+double map_pixel_height;
+double map_scale;
 
 std::default_random_engine da_generator;
 std::vector<double> lidar_data(200, 0.0);
@@ -87,10 +92,23 @@ int main(int _argc, char **_argv) {
 
     const int key_left = 81;
 
-    //Generate initial particles
+    //Load in the map
     cv::Mat map = cv::imread("floor_plan.png");
-    cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
+    // Generate waypoints
+    std::vector<cv::Point2i> waypoints;
+    getWaypoints(map, waypoints);
 
+
+
+    // Resize map
+    map_scale = 6.0;
+    cv::resize(map, map, cv::Size(), map_scale, map_scale, cv::INTER_AREA);
+
+    // Save the current size of the map, used by some util
+    map_pixel_height = map.rows;
+    map_pixel_width = map.cols;
+
+    //Generate initial particles
     std::vector<Particle> particles;
     initParticles(map, 50, particles);
 
