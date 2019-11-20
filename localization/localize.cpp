@@ -19,8 +19,8 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-    std::uniform_real_distribution<double> width_distr((map.cols-140.0)/2.0, (map.cols + 140)/2.0);
-    std::uniform_real_distribution<double> height_distr((map.rows-140.0) / 2.0, (map.rows + 140.0) / 2.0);
+    std::uniform_real_distribution<double> width_distr((map.cols-240.0)/2.0, (map.cols + 240)/2.0);
+    std::uniform_real_distribution<double> height_distr((map.rows-240.0) / 2.0, (map.rows + 240.0) / 2.0);
     //std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
     //std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
     //std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
@@ -51,7 +51,7 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 	// Translation is a distance moved
 
     //std::default_random_engine generator;
-    std::normal_distribution<double> trans_distr(0.3, 2);
+    std::normal_distribution<double> trans_distr(0.0, 2);
     std::normal_distribution<double> ori_distr(0, 0.2);
 
 

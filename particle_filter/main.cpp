@@ -91,7 +91,7 @@ int main(int _argc, char **_argv) {
     cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
 
     std::vector<Particle> particles;
-    initParticles(map, 100, particles);
+    initParticles(map, 50, particles);
 
     int iteration = 0;
     //init_video_capture();
