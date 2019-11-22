@@ -10,6 +10,8 @@
 */
 void showImage(std::string image_name, cv::Mat mat);
 
+bool nearTargetWaypoint(cv::Point2i targetWaypoint, double radius);
+
 void getCorners(cv::Mat& mat, std::vector<cv::Point2i>& corners);
 
 

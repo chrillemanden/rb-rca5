@@ -19,8 +19,8 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-    std::uniform_real_distribution<double> width_distr((map.cols-240.0)/2.0, (map.cols + 240)/2.0);
-    std::uniform_real_distribution<double> height_distr((map.rows-240.0) / 2.0, (map.rows + 240.0) / 2.0);
+    std::uniform_real_distribution<double> width_distr((map.cols-20.0)/2.0, (map.cols + 20)/2.0);
+    std::uniform_real_distribution<double> height_distr((map.rows-20.0) / 2.0, (map.rows + 20.0) / 2.0);
     //std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
     //std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
     //std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
@@ -102,6 +102,22 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 
 	}
 	
+}
+
+void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y)
+{
+    double sum_x = 0;
+    double sum_y = 0;
+
+    for (auto& p: particles)
+    {
+        sum_x += p.col;
+        sum_y += p.row;
+    }
+
+    x = sum_x / particles.size();
+    y = sum_y / particles.size();
+
 }
 
 double findWeightedSum(std::vector<Particle>& particles)

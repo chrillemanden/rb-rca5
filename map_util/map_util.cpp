@@ -22,6 +22,7 @@ extern double gaz_x_pos;
 extern double gaz_y_pos;
 extern double map_pixel_width;
 extern double map_pixel_height;
+extern double map_scale;
 
 void showImage(std::string image_name, cv::Mat mat)
 {
@@ -30,15 +31,24 @@ void showImage(std::string image_name, cv::Mat mat)
 }
 
 
-bool nearTargetWaypoint(cv::Point2i targetWaypoint, double radius = 5.0)
+bool nearTargetWaypoint(cv::Point2i targetWaypoint, double radius)
 {
     double g_x = gaz_x_pos;
     double g_y = gaz_y_pos;
 
-    double t_x = targetWaypoint.x - map_pixel_width;
-    double t_y = targetWaypoint.y - map_pixel_height;
+    //double t_x = targetWaypoint.x * map_scale - map_pixel_width / 2;
+    //double t_y = targetWaypoint.y * map_scale - map_pixel_height / 2;
+
+//    goal_x = waypoints[32].y - map.cols / 2;
+//    goal_y = waypoints[32].x - map.rows / 2;
+
+    double t_x = (targetWaypoint.y - 120 / 2)/1.417;
+    double t_y = -(targetWaypoint.x - 80 / 2)/1.417; // I messed up storing information in Point2i, so the x- and y- coordinates are interchanged
 
     double dist = sqrt(pow(t_x-gaz_x_pos,2)+pow(t_y-gaz_y_pos,2));
+
+    //std::cout << "t_x: " << t_x << " - t_y: " << t_y << " - dist: " << dist << std::endl;
+    //std::cout << "g_x: " << g_x << " - g_y: " << g_y << " - t_x: " << t_x << " - t_y: " << t_y << " - dist: " << dist << std::endl; //<< " - t_x: " << t_x << " - t_y: " << t_y << std::endl;
 
     return (dist <= radius) ? true : false;
 

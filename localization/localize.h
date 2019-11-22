@@ -29,6 +29,8 @@ void initParticles(cv::Mat& map, int N, std::vector<Particle> &particles);
 
 void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double translation, double rotation);
 
+void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y);
+
 double findWeightedSum(std::vector<Particle>& particles);
 
 void normaliseWeights(std::vector<Particle>& particles);

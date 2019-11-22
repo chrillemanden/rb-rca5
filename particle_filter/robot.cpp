@@ -37,7 +37,7 @@ void poseCallback(ConstPosesStampedPtr &_msg) {
 
 //      std::cout << std::setprecision(2) << std::fixed << std::setw(6)
 //                << _msg->pose(i).position().x() << std::setw(6)
-//                << _msg->pose(i).position().y() << std::setw(6)
+//                << _msg->pose(i).position().y() << std::endl; //std::setw(6)
 //                << _msg->pose(i).position().z() << std::setw(6)
 //                << _msg->pose(i).orientation().w() << std::setw(6)
 //                << _msg->pose(i).orientation().x() << std::setw(6)
@@ -57,14 +57,19 @@ void poseCallback(ConstPosesStampedPtr &_msg) {
       double x_pos = _msg->pose(i).position().x();
       double y_pos = _msg->pose(i).position().y();
 
-      double ori_x = cos(robot_yaw);
-      double ori_y = sin(robot_yaw);
-
       double goal_vec_x = goal_x - x_pos;
       double goal_vec_y = goal_y - y_pos;
 
+      gaz_x_pos = x_pos;
+      gaz_y_pos = y_pos;
 
-      global_goal_angle = atan2(goal_vec_y,goal_vec_x) - atan2(ori_y, ori_x);
+      double ori_x = cos(robot_yaw);
+      double ori_y = sin(robot_yaw);
+
+
+
+
+      global_goal_angle = (atan2(goal_vec_y,goal_vec_x) - atan2(ori_y, ori_x));
 
       if (global_goal_angle > pi)
       {

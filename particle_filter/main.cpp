@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <random>
+#include <fstream>
 
 /* Driver includes */
 #include "camera.h"
@@ -39,9 +40,7 @@ extern double first_data_point;
 
 int main(int _argc, char **_argv) {
 
-  //init_gazebo();
-
-    std::vector<double> lidar_data;
+    //init_gazebo()
 
     // Load gazebo
     gazebo::client::setup(_argc, _argv);
@@ -84,8 +83,12 @@ int main(int _argc, char **_argv) {
 
     float speed = 0.0;
     float dir = 0.0;
-    goal_x = 35.0;
-    goal_y = 2.0;
+
+    std::ofstream pose_file;
+    pose_file.open("poses.csv");
+    //pose_file << "my first write\n";
+    //pose_file.close();
+
 
     // Array that has direction and speed from control functions
     float arrSteer[2];
@@ -98,26 +101,52 @@ int main(int _argc, char **_argv) {
     std::vector<cv::Point2i> waypoints;
     getWaypoints(map, waypoints);
 
+    //double t_x = (targetWaypoint.y - 120 / 2)/1.417;
+    //double t_y = -(targetWaypoint.x - 80 / 2)/1.417;
 
+    goal_x = (waypoints[32].y - map.cols / 2)/1.417;
+    goal_y = -(waypoints[32].x - map.rows / 2)/1.417;
+
+    //goal_x = 35;
+    //goal_y = -20;
 
     // Resize map
     map_scale = 6.0;
-    cv::resize(map, map, cv::Size(), map_scale, map_scale, cv::INTER_AREA);
+    cv::resize(map, map, cv::Size(), 6, 6, cv::INTER_AREA);
+    cv::Mat map_poses = map.clone();
 
     // Save the current size of the map, used by some util
     map_pixel_height = map.rows;
     map_pixel_width = map.cols;
+
+
+    int save_pose_every = 5;
+    int pose_it = 0;
+
+    std::vector<cv::Point2i> real_pose;
+    std::vector<cv::Point2i> estimated_pose;
 
     //Generate initial particles
     std::vector<Particle> particles;
     initParticles(map, 50, particles);
 
     int iteration = 0;
+
+    int index_waypoint = 0;
+
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[38], waypoints[37], waypoints[33]};
+    std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[35], waypoints[34], waypoints[29], waypoints[27], waypoints[25], waypoints[22]};
+
+    //goal_x = seq_waypoints[0].y - map.cols / 2;
+    //goal_y = seq_waypoints[0].x - map.rows / 2;
+
     //init_video_capture();
     // Loop
     while (true)
     {
         gazebo::common::Time::MSleep(10);
+
+
 
         da_mutex.lock();
         int key = cv::waitKey(1);
@@ -126,14 +155,27 @@ int main(int _argc, char **_argv) {
         /*if(key == key_left)
         {
             break;
-        }
+        }*/
         if(tick > 0)
-        {*/
+        {
             simple_fuzzy_avoidance(arrSteer);
+
+            pose_it++;
 
             // Get speed and direction from the control function
             speed = arrSteer[0];
             dir = arrSteer[1];
+
+            std::cout << "goal angle: " << global_goal_angle << std::endl;
+            //std::cout << "filler" << std::endl;
+
+//            if (global_goal_angle > 0.4)
+//                dir = -0.4;
+//            else if (global_goal_angle < -0.4)
+//                dir = 0.4;
+//            else
+//                dir = arrSteer[1];
+
 
             //speed = 0.0;
             //dir = 0.0;
@@ -164,13 +206,50 @@ int main(int _argc, char **_argv) {
                 cv::circle(map_particles, cv::Point2i((int)p.col,(int)p.row), 2, cv::Scalar(0,127,0), 2, 8);
             }
 
+            if (nearTargetWaypoint(seq_waypoints[index_waypoint], 2) && index_waypoint < seq_waypoints.size())
+            {
+                index_waypoint++;
+                goal_x = (seq_waypoints[index_waypoint].y - 120 / 2)/1.417;
+                goal_y = -(seq_waypoints[index_waypoint].x - 80 / 2)/1.417;
+
+            }
+            ;
+            // " -- Current: x" << waypoints[32].x << " -- y: " << waypoints[32].y <<
+            //std::cout << "Goal: x: " << goal_x << " -- y: " << goal_y << " -- near waypoint: " << nearTargetWaypoint(waypoints[32], 5) << std::endl;
+
             showImage("Particles", map_particles);
 
-            //tick--;
+            if(pose_it > save_pose_every)
+            {
+                pose_it = 0;
+                double xx = (gaz_x_pos*6*1.417 + map_pixel_width/2);
+                double yy = (-gaz_y_pos*6*1.417 + map_pixel_height/2);
+
+                double xxx = 0;
+                double yyy = 0;
+
+                //void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y)
+                getParticlesEstimatedPosition(particles, xxx, yyy);
+
+                pose_file << xx << ";" << yy << ";" << xxx << ";" << yyy << ";\n";
+                //pose_file << "2;\n";
+                cv::circle(map_poses, cv::Point2i((int)xxx,(int)yyy), 2, cv::Scalar(255,0,0), 2, 8);
+                cv::circle(map_poses, cv::Point2i((int)xx,(int)yy), 4, cv::Scalar(255,0,255), 2, 8);
+
+                //std::vector<cv::Point2i> real_pose;
+            }
+            if (index_waypoint == seq_waypoints.size() - 2)
+            {
+                pose_file.close();
+                return 0;
+            }
+            showImage("Poses", map_poses);
+
+            tick--;
 
 
 
-       // }
+       }
 
         // Generate a pose
         ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
