@@ -32,10 +32,20 @@ double gaz_y_pos;
 double map_pixel_width;
 double map_pixel_height;
 double map_scale;
+double robot_orientation;
 
 std::default_random_engine da_generator;
 std::vector<double> lidar_data(200, 0.0);
 extern double first_data_point;
+
+void draw_waypoints(cv::Mat &map, std::vector<cv::Point2i> waypoints_to_draw)
+{
+    for (auto & point : waypoints_to_draw)
+    {
+        std::cout << "Point values: " << point.y << " - " << point.x << std::endl;
+        cv::circle(map, cv::Point2i((point.y*6), (point.x*6)), 5, cv::Scalar(0,128,0), 9, 8);
+    }
+}
 
 
 int main(int _argc, char **_argv) {
@@ -95,6 +105,8 @@ int main(int _argc, char **_argv) {
 
     const int key_left = 81;
 
+    //if (key)
+
     //Load in the map
     cv::Mat map = cv::imread("floor_plan.png");
     // Generate waypoints
@@ -120,7 +132,7 @@ int main(int _argc, char **_argv) {
     map_pixel_width = map.cols;
 
 
-    int save_pose_every = 5;
+    int save_pose_every = 20;
     int pose_it = 0;
 
     std::vector<cv::Point2i> real_pose;
@@ -134,14 +146,88 @@ int main(int _argc, char **_argv) {
 
     int index_waypoint = 0;
 
-    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[38], waypoints[37], waypoints[33]};
-    std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[35], waypoints[34], waypoints[29], waypoints[27], waypoints[25], waypoints[22]};
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[38], waypoints[37], waypoints[33], waypoints[30], waypoints[28], waypoints[19]};
+
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[19], waypoints[13], waypoints[12], waypoints[13], waypoints[10], waypoints[7], waypoints[5], waypoints[0], waypoints[5], waypoints[7], waypoints[3], waypoints[10], waypoints[14], waypoints[20], waypoints[26]};
+
+    // Room 26_23
+    std::vector<cv::Point2i> seq_waypoints = {waypoints[13], waypoints[11], waypoints[10], waypoints[14], waypoints[17], waypoints[20], waypoints[26], waypoints[20], waypoints[17], waypoints[18], waypoints[21], waypoints[23], waypoints[37]};
+
+    // Room 0
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[13], waypoints[11], waypoints[10], waypoints[7], waypoints[5], waypoints[0], waypoints[37]};
+
+    // Room 2
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[19], waypoints[11], waypoints[6], waypoints[1], waypoints[2], waypoints[37]};
+
+    // Room 12
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[19], waypoints[13], waypoints[12], waypoints[8]};
+
+    // Room 22
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[35], waypoints[34], waypoints[29], waypoints[27], waypoints[25], waypoints[22], waypoints[12]};
+
+    // Room 24
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[35], waypoints[36], waypoints[31], waypoints[24], waypoints[12]};
+
+    // Room 32_30
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[28], waypoints[32], waypoints[38], waypoints[37], waypoints[33], waypoints[30], waypoints[32], waypoints[35]};
+
+
+    // Trying to provoke some mistakes:
+    // Room 0 failing
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[13], waypoints[11], waypoints[10], waypoints[3], waypoints[7], waypoints[5], waypoints[0], waypoints[37]};
+
+    // Room 2 - 4 turning in a tight corner
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[19], waypoints[11], waypoints[6], waypoints[1], waypoints[2], waypoints[4], waypoints[2], waypoints[37]};
+
+    // Room 16 - 14 - tight turns
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[19], waypoints[16], waypoints[14], waypoints[10], waypoints[11], waypoints[12]};
+
+    // Room 16 - 14 - tight turns
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[11], waypoints[10], waypoints[7], waypoints[5], waypoints[0], waypoints[12]};
+
+    // Room 0
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[13], waypoints[11], waypoints[10], waypoints[7], waypoints[5], waypoints[0], waypoints[5], waypoints[7], waypoints[3], waypoints[37]};
+
+    // Room 22
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[32], waypoints[35], waypoints[34], waypoints[29], waypoints[27], waypoints[25], waypoints[22], waypoints[25], waypoints[27], waypoints[12]};
+
+    // Room 30_38_32 fail!
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[28], waypoints[30], waypoints[33], waypoints[37], waypoints[38], waypoints[32], waypoints[28], waypoints[35]};
+
+    // Room 30_38_32
+    //std::vector<cv::Point2i> seq_waypoints = {waypoints[28], waypoints[32], waypoints[30], waypoints[33], waypoints[37], waypoints[38], waypoints[35], waypoints[36]};
+
+    goal_x = (seq_waypoints[0].y - 120 / 2)/1.417;
+    goal_y = -(seq_waypoints[0].x - 80 / 2)/1.417;
+
+    std::cout << map_pixel_height << " - " << map_pixel_width << std::endl;
+
+    // Starting point:
+    cv::circle(map_poses, cv::Point2i(map_pixel_width/2,map_pixel_height/2), 4, cv::Scalar(128,0,0), 2, 8);
+
+    //draw_waypoints(map_poses, std::vector<cv::Point2i>(seq_waypoints.begin(), seq_waypoints.end()-1));
+
+//    for (auto & point : seq_waypoints)
+//    {
+//        std::cout << "Point values: " << point.y << " - " << point.x << std::endl;
+//       cv::circle(map_poses, cv::Point2i((point.y*6), (point.x*6)), 3, cv::Scalar(0,128,0), 4, 8);
+//    }
+    // cv::Point2i((point.y*6 - 80 / 2), (point.x*6 - 120 / 2))
+    //xxx = (xxx - map_pixel_width/2)/1.417/6;
+    //yyy = -(yyy - map_pixel_height/2)/1.417/6;
+
+
+    double estimated_rot;
+
+    cv::Mat map_particles;
 
     //goal_x = seq_waypoints[0].y - map.cols / 2;
     //goal_y = seq_waypoints[0].x - map.rows / 2;
 
     //init_video_capture();
     // Loop
+
+    int timestep = 0;
     while (true)
     {
         gazebo::common::Time::MSleep(10);
@@ -152,10 +238,14 @@ int main(int _argc, char **_argv) {
         int key = cv::waitKey(1);
         da_mutex.unlock();
 
-        /*if(key == key_left)
+        if(key == key_left)
         {
+            pose_file.close();
+            cv::imwrite("tracking.png", map_poses);
+            cv::imwrite("particles.png", map_particles);
+            return 0;
             break;
-        }*/
+        }
         if(tick > 0)
         {
             simple_fuzzy_avoidance(arrSteer);
@@ -166,7 +256,7 @@ int main(int _argc, char **_argv) {
             speed = arrSteer[0];
             dir = arrSteer[1];
 
-            std::cout << "goal angle: " << global_goal_angle << std::endl;
+            //std::cout << "goal angle: " << global_goal_angle << std::endl;
             //std::cout << "filler" << std::endl;
 
 //            if (global_goal_angle > 0.4)
@@ -179,6 +269,41 @@ int main(int _argc, char **_argv) {
 
             //speed = 0.0;
             //dir = 0.0;
+
+            double xx = (gaz_x_pos*6*1.417 + map_pixel_width/2);
+            double yy = (-gaz_y_pos*6*1.417 + map_pixel_height/2);
+
+            double xxx = 0;
+            double yyy = 0;
+
+            getParticlesEstimatedPosition(particles, xxx, yyy, estimated_rot);
+
+
+
+
+            if(pose_it > save_pose_every)
+            {
+                pose_it = 0;
+
+                //void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y)
+
+                cv::circle(map_poses, cv::Point2i((int)xx,(int)yy), 4, cv::Scalar(255,0,255), 2, 8);
+                cv::circle(map_poses, cv::Point2i((int)xxx,(int)yyy), 2, cv::Scalar(255,0,0), 2, 8);
+                //pose_file << "2;\n";
+                //std::vector<cv::Point2i> real_pose;
+            }
+
+            xxx = (xxx - map_pixel_width/2)/1.417/6;
+            yyy = -(yyy - map_pixel_height/2)/1.417/6;
+            //std::cout << "Rotation: Estimated: " << estimated_rot << ", Real: " << robot_orientation << std::endl;
+            pose_file << gaz_x_pos << ";" << gaz_y_pos<< ";" << xxx << ";" << yyy << ";" << robot_orientation << ";" << estimated_rot << ";\n";
+
+//            if (timestep % 200 == 0)
+//            {
+//                cv::circle(map_poses, cv::Point2i((int)xx,(int)yy), 4, cv::Scalar(0,128,0), 2, 8);
+//                cv::putText(map_poses, std::to_string(timestep/100), cv::Point2i((int)xx,(int)yy-20), cv::FONT_HERSHEY_SIMPLEX, 1.5, cv::Scalar(0,128,0),3);
+//            }
+
 
             predictParticles(map, particles, speed, dir); //speed*3
 
@@ -200,11 +325,11 @@ int main(int _argc, char **_argv) {
             //std::cout << "Iteration number" << iteration++ << std::endl;
             //std::cout << "Particle[0]: " << particles[0].col << ", row: " << particles[0].row << std::endl;
 
-            cv::Mat map_particles = map.clone();
-            for (auto & p : particles)
-            {
-                cv::circle(map_particles, cv::Point2i((int)p.col,(int)p.row), 2, cv::Scalar(0,127,0), 2, 8);
-            }
+//            map_particles = map.clone();
+//            for (auto & p : particles)
+//            {
+//                cv::circle(map_particles, cv::Point2i((int)p.col,(int)p.row), 2, cv::Scalar(0,127,0), 2, 8);
+//            }
 
             if (nearTargetWaypoint(seq_waypoints[index_waypoint], 2) && index_waypoint < seq_waypoints.size())
             {
@@ -217,35 +342,20 @@ int main(int _argc, char **_argv) {
             // " -- Current: x" << waypoints[32].x << " -- y: " << waypoints[32].y <<
             //std::cout << "Goal: x: " << goal_x << " -- y: " << goal_y << " -- near waypoint: " << nearTargetWaypoint(waypoints[32], 5) << std::endl;
 
-            showImage("Particles", map_particles);
+            //showImage("Particles", map_particles);
 
-            if(pose_it > save_pose_every)
+
+            if (index_waypoint == seq_waypoints.size() - 1)
             {
-                pose_it = 0;
-                double xx = (gaz_x_pos*6*1.417 + map_pixel_width/2);
-                double yy = (-gaz_y_pos*6*1.417 + map_pixel_height/2);
-
-                double xxx = 0;
-                double yyy = 0;
-
-                //void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y)
-                getParticlesEstimatedPosition(particles, xxx, yyy);
-
-                pose_file << xx << ";" << yy << ";" << xxx << ";" << yyy << ";\n";
-                //pose_file << "2;\n";
-                cv::circle(map_poses, cv::Point2i((int)xxx,(int)yyy), 2, cv::Scalar(255,0,0), 2, 8);
-                cv::circle(map_poses, cv::Point2i((int)xx,(int)yy), 4, cv::Scalar(255,0,255), 2, 8);
-
-                //std::vector<cv::Point2i> real_pose;
-            }
-            if (index_waypoint == seq_waypoints.size() - 2)
-            {
+                cv::imwrite("tracking.png", map_poses);
+                cv::imwrite("particles.png", map_particles);
                 pose_file.close();
                 return 0;
             }
             showImage("Poses", map_poses);
 
             tick--;
+            timestep++;
 
 
 

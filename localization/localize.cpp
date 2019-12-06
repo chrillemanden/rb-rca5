@@ -19,13 +19,13 @@ void initParticles(cv::Mat &map, int N, std::vector<Particle> &particles)
 
 	std::default_random_engine generator;
 	
-    std::uniform_real_distribution<double> width_distr((map.cols-20.0)/2.0, (map.cols + 20)/2.0);
-    std::uniform_real_distribution<double> height_distr((map.rows-20.0) / 2.0, (map.rows + 20.0) / 2.0);
+    std::uniform_real_distribution<double> width_distr((map.cols-10.0)/2.0, (map.cols + 10)/2.0);
+    std::uniform_real_distribution<double> height_distr((map.rows-10.0) / 2.0, (map.rows + 10.0) / 2.0);
     //std::uniform_real_distribution<double> width_distr(10.0, map.cols-10.0);
     //std::uniform_real_distribution<double> height_distr(10.0, map.rows-10.0);
-    //std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
+    std::uniform_real_distribution<double> orientation_distr(-3.14, 3.14);
     //std::uniform_real_distribution<double> orientation_distr(-0.002 + 0.5 * 3.14, 0.002 + 0.5 * 3.14);
-    std::uniform_real_distribution<double> orientation_distr(-0.002, 0.002);
+    //std::uniform_real_distribution<double> orientation_distr(-0.002, 0.002);
 
 	for (int i = 0; i < N; i++)
 	{
@@ -51,13 +51,13 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
 	// Translation is a distance moved
 
     //std::default_random_engine generator;
-    std::normal_distribution<double> trans_distr(0.0, 2);
-    std::normal_distribution<double> ori_distr(0, 0.2);
+    std::normal_distribution<double> trans_distr(0.0, 1.5);
+    std::normal_distribution<double> ori_distr(0, 0.4);
 
 
 	for (auto& p : particles)
     {
-        double max_noise = 0.6;
+        double max_noise = 0.7;
         double noise = trans_distr(da_generator);
         if (noise > max_noise)
         {
@@ -93,30 +93,52 @@ void predictParticles(cv::Mat& map, std::vector<Particle>& particles, double tra
             p.row = trans_row;
             p.col = trans_col;
             p.orientation += rotation + ori_distr(da_generator);
+            if (p.orientation > 3.14)
+            {
+                p.orientation -= 2.0*3.14;
+            }
+            else if (p.orientation < -3.14)
+            {
+                p.orientation += 2.0*3.14;
+            }
+
         }
         else
         {
             p.weight = 0;
             p.orientation += rotation + ori_distr(da_generator);
+            if (p.orientation > 3.14)
+            {
+                p.orientation -= 2.0*3.14;
+            }
+            else if (p.orientation < -3.14)
+            {
+                p.orientation += 2.0*3.14;
+            }
         }
 
 	}
 	
 }
 
-void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y)
+void getParticlesEstimatedPosition(std::vector<Particle>& particles, double &x, double &y, double &r)
 {
     double sum_x = 0;
     double sum_y = 0;
+    double sum_r = 0;
 
     for (auto& p: particles)
     {
         sum_x += p.col;
         sum_y += p.row;
+        sum_r += p.orientation;
     }
+
+    //std::cout << "Orientation 0: " << particles[0].orientation << std::endl;
 
     x = sum_x / particles.size();
     y = sum_y / particles.size();
+    r = sum_r / particles.size();
 
 }
 

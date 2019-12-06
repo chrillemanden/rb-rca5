@@ -17,6 +17,7 @@ extern double gaz_x_pos;
 extern double gaz_y_pos;
 
 extern double global_goal_angle;
+extern double robot_orientation;
 
 const double pi = boost::math::constants::pi<double>();
 
@@ -53,6 +54,7 @@ void poseCallback(ConstPosesStampedPtr &_msg) {
       double siny_cosp = 2.0 * (p_ori_w * p_ori_z + p_ori_x * p_ori_y);
       double cosy_cosp = 1.0 - 2.0 * (p_ori_y * p_ori_y + p_ori_z * p_ori_z);
       double robot_yaw = atan2(siny_cosp, cosy_cosp);
+      robot_orientation = robot_yaw;
 
       double x_pos = _msg->pose(i).position().x();
       double y_pos = _msg->pose(i).position().y();
@@ -73,11 +75,11 @@ void poseCallback(ConstPosesStampedPtr &_msg) {
 
       if (global_goal_angle > pi)
       {
-          global_goal_angle -= 2*pi;
+          global_goal_angle -= 2.0*pi;
       }
       else if (global_goal_angle < -pi)
       {
-          global_goal_angle += 2*pi;
+          global_goal_angle += 2.0*pi;
       }
 
       //std::cout << "Angle towards goal: " << global_goal_angle << std::endl;

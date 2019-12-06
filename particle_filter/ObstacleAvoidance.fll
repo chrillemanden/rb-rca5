@@ -77,193 +77,193 @@ RuleBlock: mamdani
  rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is backRight then mSteer is rightVeryBig
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightVeryBig
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is backRight then mSteer is rightVeryBig
- rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is backRight then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is backRight then mSteer is left
+ rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is backRight then mSteer is forward
 
  rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightVeryBig
  rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is backRight then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is backRight then mSteer is leftVeryBig
- rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is backRight then mSteer is leftVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is backRight then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is backRight then mSteer is forward
+ rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is backRight then mSteer is forward
 
- rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is backRight then mSteer is leftBig
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is backRight then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is backRight then mSteer is rightVeryBig
 
- rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is backRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is backRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is backRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is backRight then mSteer is rightVeryBig
 
- rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is farRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is farRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is farRight then mSteer is right
+ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is farRight then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is farRight then mSteer is left
+ rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is farRight then mSteer is forward
 
- rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is farRight then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is farRight then mSteer is leftVeryBig
- rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is farRight then mSteer is leftBig
+ rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is farRight then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is farRight then mSteer is forward
+ rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is farRight then mSteer is forward
 
- rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is farRight then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is farRight then mSteer is rightVeryBig
  rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is farRight then mSteer is rightVeryBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is farRight then mSteer is leftBig
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is farRight then mSteer is left
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is farRight then mSteer is rightVeryBig
 
- rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is farRight then mSteer is rightBig
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is farRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is farRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is farRight then mSteer is right
+ rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is farRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is farRight then mSteer is rightVeryBig
 
- rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is closeRight then mSteer is right
+ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is closeRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is closeRight then mSteer is left
+ rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is closeRight then mSteer is forward
 
  rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is right
  rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is closeRight then mSteer is right
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is closeRight then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is closeRight then mSteer is leftBig
- rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is closeRight then mSteer is leftBig
+ rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is closeRight then mSteer is rightVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is closeRight then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is closeRight then mSteer is forward
 
- rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is closeRight then mSteer is right
+ rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is closeRight then mSteer is rightBig
  rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is closeRight then mSteer is leftBig
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is closeRight then mSteer is left
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is closeRight then mSteer is rightBig
 
- rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is closeRight then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is closeRight then mSteer is right
+ rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is closeRight then mSteer is rightBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is closeRight then mSteer is rightBig
 
  rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is forward then mSteer is right
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is forward then mSteer is right
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is forward then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is forward then mSteer is rightVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is forward then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is forward then mSteer is left
  rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is forward then mSteer is forward
 
  rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is forward then mSteer is right
  rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is forward then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is forward then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is forward then mSteer is leftBig
- rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is forward then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is forward then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is forward then mSteer is forward
 
  rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is forward then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is forward then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is forward then mSteer is rightBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is forward then mSteer is left
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is forward then mSteer is left
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is forward then mSteer is forward
 
  rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is forward then mSteer is forward
- rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is forward then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is forward then mSteer is right
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is forward then mSteer is left
+ rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is forward then mSteer is forward
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is forward then mSteer is forward
  rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is forward then mSteer is forward
 
- rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is left
+ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is forward
+ rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is closeLeft then mSteer is right
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is closeLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is leftBig
 
- rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is closeLeft then mSteer is forward
+ rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is forward
+ rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is closeLeft then mSteer is right
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is rightBig
- rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is closeLeft then mSteer is rightVeryBig
- rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is closeLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is leftBig
  rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is closeLeft then mSteer is leftBig
- rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is left
+ rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is leftBig
 
- rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is closeLeft then mSteer is forward
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is closeLeft then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is closeLeft then mSteer is leftBig
  rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is leftBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is left
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is leftBig
 
- rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is closeLeft then mSteer is left
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is left
+ rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is closeLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is closeLeft then mSteer is leftBig
 
- rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is forward
+ rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is farLeft then mSteer is right
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is rightBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is forward and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is right and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryClose and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftVeryBig
 
- rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftBig
+ rule: if obstacle_distance is close and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is forward
  rule: if obstacle_distance is close and obstacle_angle is left and goal_angle is farLeft then mSteer is forward
  rule: if obstacle_distance is close and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is right
- rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farLeft then mSteer is rightBig
+ rule: if obstacle_distance is close and obstacle_angle is forward and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is close and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is close and obstacle_angle is right and goal_angle is farLeft then mSteer is leftBig
  rule: if obstacle_distance is close and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftBig
 
- rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftBigVeryBig
- rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is farLeft then mSteer is forward
- rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is right
- rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is farLeft then mSteer is rightBig
+ rule: if obstacle_distance is far and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is left and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is forward and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is far and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftVeryBig
- rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftBig
+ rule: if obstacle_distance is far and obstacle_angle is right and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is far and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftVeryBig
 
- rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is forward
- rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is farLeft then mSteer is forward
+ rule: if obstacle_distance is veryFar and obstacle_angle is farLeft and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is left and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is veryFar and obstacle_angle is closeLeft and goal_angle is farLeft then mSteer is leftVeryBig
  rule: if obstacle_distance is veryFar and obstacle_angle is forward and goal_angle is farLeft then mSteer is leftVeryBig
- rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is farLeft then mSteer is leftBig
- rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is closeRight and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is right and goal_angle is farLeft then mSteer is leftVeryBig
+ rule: if obstacle_distance is veryFar and obstacle_angle is farRight and goal_angle is farLeft then mSteer is leftVeryBig
 
  rule: if obstacle_distance is veryClose and obstacle_angle is farLeft and goal_angle is backLeft then mSteer is right
  rule: if obstacle_distance is veryClose and obstacle_angle is left and goal_angle is backLeft then mSteer is rightBig
@@ -299,6 +299,8 @@ RuleBlock: mamdani
 
 rule: if goal_angle is backRight then robot_speed is min
 rule: if goal_angle is backLeft then robot_speed is min
+rule: if goal_angle is farLeft then robot_speed is slow
+rule: if goal_angle is farRight then robot_speed is slow
 
 
   #First row in the rule base table - robot_speed
