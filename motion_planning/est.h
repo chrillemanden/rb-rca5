@@ -35,7 +35,15 @@ public:
     EST();
     EST(vertex q_start, cv::Mat map);
 
-    vertex extendEST(cv::Mat &map_show);
+    /*
+     * Extend the tree with a new configuration
+     * return the new configuration
+     */
+    vertex extendEST(cv::Mat map_show);
+
+    /*
+     * Given a configuration, return the configuration in the tree closest to
+     */
     vertex getClosest(vertex q_new);
 
     std::vector<vertex> vertices;
@@ -59,9 +67,9 @@ bool collFreePath(vertex q1, vertex q2, cv::Mat map);
  * Function that given a list of vertices and a 2d-map, finds shorter collision free paths
  * among the vertices and returns a list of these. Used for post-processing of generated
  * single-query paths
- *
+ * The new path is returned in the same vector that is input
  */
-void shortenPath(std::vector<vertex> vertices, cv::Mat map);
+void shortenPath(std::vector<vertex> &vertices, cv::Mat map);
 
 
 /*
@@ -69,16 +77,20 @@ void shortenPath(std::vector<vertex> vertices, cv::Mat map);
  * free path exists beteem the configurations, returns a list of vertices that contains a path
  * from root of one tree to the root of the other.
  */
-void isolatePath(EST start_tree, EST goal_tree, vertex q1, vertex q2, cv::Mat map);
+std::vector<vertex> isolatePath(EST start_tree, EST goal_tree, vertex q1, vertex q2, cv::Mat map);
 
 
 /*
  * Function that given two configurations on a 2d map, finds a path between the configurations
  * by growing Expansive Space Trees (EST) from each configuration
+ * Returns the path in vector of vertices
  */
-void ESTquery(vertex q_start, vertex q_goal, int n, cv::Mat map);
+std::vector<vertex> ESTquery(vertex q_start, vertex q_goal, int n, cv::Mat map);
 
-
+/*
+ * Function that builds a single Expansive Spaces Tree in a 2d map
+ */
+void buildSingleEST(vertex q_start, int n, cv::Mat &map);
 
 
 #endif // EST_H
