@@ -37,14 +37,22 @@ int main()
     q_goal.x_pos = 800;
     q_goal.y_pos = 360;
 
-    // Make a query from one configuration to the other on the map
-    std::vector<vertex> path = ESTquery(q_start,q_goal, 200, map);
+//    // Make a query from one configuration to the other on the map
+//    std::vector<vertex> path = ESTquery(q_start,q_goal, 200, map);
 
-    // Print all the configurations in the path
-    for (auto &v : path)
+//    // Print all the configurations in the path
+//    for (auto &v : path)
+//    {
+//        std::cout << "x: " << v.x_pos << " , y: " << v.y_pos << std::endl;
+//    }
+
+    RRT rrt_demo(q_start, map);
+    for (int i = 0; i < 5; i++)
     {
-        std::cout << "x: " << v.x_pos << " , y: " << v.y_pos << std::endl;
+        rrt_demo.extendRRT(map);
     }
+
+
 
     std::cout << "Demonstration done!" << std::endl;
     cv::waitKey(0);

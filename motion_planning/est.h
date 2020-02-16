@@ -57,6 +57,39 @@ private:
 };
 
 /*
+    Class for building an Rapidly Exploring Random Trees (RTT) on a 2D map
+    RRT objects are used when performing an RRT-query to get from q_start to q_goal on a map
+*/
+class RRT
+{
+public:
+    RRT();
+    RRT(vertex q_start, cv::Mat map);
+
+    /*
+     * Extend the tree with a new configuration
+     * return the new configuration
+     */
+    vertex extendRRT(cv::Mat &map_show);
+
+    /*
+     * Given a configuration, return the configuration in the tree closest to
+     */
+    vertex getClosest(vertex q_new);
+
+    std::vector<vertex> vertices;
+
+private:
+    int number_edges = 0;
+    int h;
+    int w;
+    int step_size;
+    int q_indx;
+    cv::Mat map;
+
+};
+
+/*
  * Function that returns true if there exists a collision-free path between q1 and q2
  * in the provided 2D map
  */

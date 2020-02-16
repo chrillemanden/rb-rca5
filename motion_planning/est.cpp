@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-
-std::default_random_engine generator;
+static std::random_device rd;
+static std::default_random_engine generator(rd());
 
 void showImage(std::string image_name, cv::Mat mat)
 {
@@ -108,6 +108,100 @@ vertex EST::getClosest(vertex q_new)
     }
     return r;
 }
+
+RRT::RRT()
+{
+
+}
+
+RRT::RRT(vertex q_start, cv::Mat map) : map(map), h(map.rows), w(map.cols), step_size(sqrt(h*h+w*w)/10)
+{
+    // Build the tree with the initial configuration
+    vertices.push_back(q_start);
+}
+
+vertex RRT::extendRRT(cv::Mat &map_show)
+{
+
+
+    // Loop until the tree has been extended with a valid new configuration
+    while (true)
+    {
+        cv::Mat show_copy = map_show.clone();
+
+        // Generate a random collision free vertex on the map
+        std::uniform_int_distribution<int> y(0, h);
+        std::uniform_int_distribution<int> x(0, w);
+        vertex q;
+        q.x_pos = x(generator);
+        q.y_pos = y(generator);
+
+        // Find q_near to q and q_new
+        vertex q_near = getClosest(q);
+        vertex q_new;
+        double angle = atan2((q.y_pos-q_near.y_pos), (q.x_pos-q_near.x_pos));
+        q_new.x_pos = q_near.x_pos + cos(angle)*step_size;
+        q_new.y_pos = q_near.y_pos + sin(angle)*step_size;
+
+        // Graphics - show the current set of q, q_near and q_new on the copy
+        cv::circle(show_copy, cv::Point2i(q.x_pos,q.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
+        cv::circle(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), 4, cv::Scalar(255,0,0), 2, 8);
+        cv::circle(show_copy, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,255,255), 2, 8);
+        cv::line(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Scalar(200,127,127), 2);
+
+        showImage("Trees", show_copy);
+        cv::waitKey(0);
+
+        // Check if there is a collision free path from q_near to q_new
+        if (collFreePath(q_new, q_near,map_show))
+        {
+
+            // Update the newly found vertex and add it to the the tree
+            q_new.n_conn += 1;
+            q_new.weight = (double)number_edges / (double)q_new.n_conn;
+            q_new.origin_indx = q_indx;
+            vertices.push_back(q_new);
+
+            // Update the sampled vertex
+            vertices[q_indx].n_conn += 1;
+            vertices[q_indx].weight = (double)number_edges / (double)vertices[q_indx].n_conn;
+
+            // Graphics
+            cv::circle(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
+            cv::line(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Scalar(0,127,127), 2);
+
+            showImage("Trees", map_show);
+            cv::waitKey(0);
+            return q_new;
+        }
+    }
+}
+
+
+vertex RRT::getClosest(vertex q_new)
+{
+    // Find the maximum distance in the map
+    double dist = sqrt(h*h+w*w);
+
+    vertex r;
+
+    int i = 0;
+    for (auto &ver : vertices)
+    {
+        int dist_x = q_new.x_pos - ver.x_pos;
+        int dist_y = q_new.y_pos - ver.y_pos;
+        if (sqrt(dist_x*dist_x + dist_y*dist_y) < dist)
+        {
+            r = ver;
+            dist = sqrt(dist_x*dist_x + dist_y*dist_y);
+            q_indx = i;
+        }
+        i++;
+    }
+    return r;
+}
+
+
 
 bool collFreePath(vertex q1, vertex q2, cv::Mat map)
 {
@@ -258,7 +352,7 @@ std::vector<vertex> ESTquery(vertex q_start, vertex q_goal, int n, cv::Mat map)
             return isolatePath(start_tree,goal_tree,q1,q2, map, map_show);;
         }
 
-        // Graphics revert highlighting
+        // Graphics - revert highlighting
         cv::circle(map_show, cv::Point2i(q1.x_pos,q1.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
         cv::circle(map_show, cv::Point2i(q2.x_pos,q2.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
 
