@@ -266,7 +266,8 @@ void shortenPath(std::vector<vertex> &vertices, cv::Mat map)
     vertices = path;
 }
 
-std::vector<vertex> isolatePath(EST start_tree, EST goal_tree, vertex q1, vertex q2, cv::Mat map, cv::Mat map_show)
+template <typename Tree>
+std::vector<vertex> isolatePath(Tree start_tree, Tree goal_tree, vertex q1, vertex q2, cv::Mat map, cv::Mat map_show)
 {
     //cv::Mat map_show = map.clone();
     std::vector<vertex> path;
@@ -412,6 +413,7 @@ std::vector<vertex> RRTquery(vertex q_start, vertex q_goal, int n, cv::Mat map)
             if (q_new1.x_pos == q_new2.x_pos && q_new1.y_pos == q_new2.y_pos)
             {
                 std::cout << "Path found with RRT" << std::endl;
+                isolatePath(T1, T2, q_new1, q_new2, map, map_show);
                 return path;
             }
             RRT temp = T1;

@@ -115,7 +115,8 @@ void shortenPath(std::vector<vertex> &vertices, cv::Mat map);
  * free path exists beteem the configurations, returns a list of vertices that contains a path
  * from root of one tree to the root of the other.
  */
-std::vector<vertex> isolatePath(EST start_tree, EST goal_tree, vertex q1, vertex q2, cv::Mat map);
+template <typename Tree>
+std::vector<vertex> isolatePath(Tree start_tree, Tree goal_tree, vertex q1, vertex q2, cv::Mat map);
 
 
 /*
