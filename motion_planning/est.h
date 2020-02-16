@@ -70,7 +70,7 @@ public:
      * Extend the tree with a new configuration
      * return the new configuration
      */
-    vertex extendRRT(cv::Mat &map_show);
+    vertex extendRRT(cv::Mat &map_show, vertex q);
 
     /*
      * Given a configuration, return the configuration in the tree closest to
@@ -88,6 +88,11 @@ private:
     cv::Mat map;
 
 };
+
+/*
+ * Function that given two vertices in a 2d map, returns the distance between them
+ */
+double vDist(vertex q1, vertex q2);
 
 /*
  * Function that returns true if there exists a collision-free path between q1 and q2
@@ -119,6 +124,10 @@ std::vector<vertex> isolatePath(EST start_tree, EST goal_tree, vertex q1, vertex
  * Returns the path in vector of vertices
  */
 std::vector<vertex> ESTquery(vertex q_start, vertex q_goal, int n, cv::Mat map);
+
+
+
+std::vector<vertex> RRTquery(vertex q_start, vertex q_goal, int n, cv::Mat map);
 
 /*
  * Function that builds a single Expansive Spaces Tree in a 2d map

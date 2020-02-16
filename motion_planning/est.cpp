@@ -114,67 +114,62 @@ RRT::RRT()
 
 }
 
-RRT::RRT(vertex q_start, cv::Mat map) : map(map), h(map.rows), w(map.cols), step_size(sqrt(h*h+w*w)/10)
+RRT::RRT(vertex q_start, cv::Mat map) : map(map), h(map.rows), w(map.cols), step_size(sqrt(h*h+w*w)/20)
 {
     // Build the tree with the initial configuration
     vertices.push_back(q_start);
 }
 
-vertex RRT::extendRRT(cv::Mat &map_show)
+vertex RRT::extendRRT(cv::Mat &map_show, vertex q)
 {
 
 
-    // Loop until the tree has been extended with a valid new configuration
-    while (true)
+    cv::Mat show_copy = map_show.clone();
+
+    // Find q_near to q and q_new
+    vertex q_near = getClosest(q);
+    vertex q_new;
+    double angle = atan2((q.y_pos-q_near.y_pos), (q.x_pos-q_near.x_pos));
+    q_new.x_pos = q_near.x_pos + cos(angle)*step_size;
+    q_new.y_pos = q_near.y_pos + sin(angle)*step_size;
+
+    // Graphics - show the current set of q, q_near and q_new on the copy
+    cv::circle(show_copy, cv::Point2i(q.x_pos,q.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
+    cv::circle(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), 4, cv::Scalar(255,0,0), 2, 8);
+    cv::circle(show_copy, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,255,255), 2, 8);
+    cv::line(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Scalar(200,127,127), 2);
+    showImage("Trees", show_copy);
+    cv::waitKey(10);
+
+    // Check if step connects q and q_near
+    if (vDist(q_near,q_new) > vDist(q_near, q))
+        q_new = q;
+
+    // Check if there is a collision free path from q_near to q_new
+    if (collFreePath(q_new, q_near,map_show))
     {
-        cv::Mat show_copy = map_show.clone();
 
-        // Generate a random collision free vertex on the map
-        std::uniform_int_distribution<int> y(0, h);
-        std::uniform_int_distribution<int> x(0, w);
-        vertex q;
-        q.x_pos = x(generator);
-        q.y_pos = y(generator);
 
-        // Find q_near to q and q_new
-        vertex q_near = getClosest(q);
-        vertex q_new;
-        double angle = atan2((q.y_pos-q_near.y_pos), (q.x_pos-q_near.x_pos));
-        q_new.x_pos = q_near.x_pos + cos(angle)*step_size;
-        q_new.y_pos = q_near.y_pos + sin(angle)*step_size;
+        // Update the newly found vertex and add it to the the tree
+        q_new.n_conn += 1;
+        q_new.weight = (double)number_edges / (double)q_new.n_conn;
+        q_new.origin_indx = q_indx;
+        vertices.push_back(q_new);
 
-        // Graphics - show the current set of q, q_near and q_new on the copy
-        cv::circle(show_copy, cv::Point2i(q.x_pos,q.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
-        cv::circle(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), 4, cv::Scalar(255,0,0), 2, 8);
-        cv::circle(show_copy, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,255,255), 2, 8);
-        cv::line(show_copy, cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Scalar(200,127,127), 2);
+        // Update the sampled vertex
+        vertices[q_indx].n_conn += 1;
+        vertices[q_indx].weight = (double)number_edges / (double)vertices[q_indx].n_conn;
 
-        showImage("Trees", show_copy);
-        cv::waitKey(0);
+        // Graphics
+        cv::circle(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
+        cv::line(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Scalar(0,127,127), 2);
 
-        // Check if there is a collision free path from q_near to q_new
-        if (collFreePath(q_new, q_near,map_show))
-        {
-
-            // Update the newly found vertex and add it to the the tree
-            q_new.n_conn += 1;
-            q_new.weight = (double)number_edges / (double)q_new.n_conn;
-            q_new.origin_indx = q_indx;
-            vertices.push_back(q_new);
-
-            // Update the sampled vertex
-            vertices[q_indx].n_conn += 1;
-            vertices[q_indx].weight = (double)number_edges / (double)vertices[q_indx].n_conn;
-
-            // Graphics
-            cv::circle(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), 4, cv::Scalar(0,0,255), 2, 8);
-            cv::line(map_show, cv::Point2i(q_new.x_pos,q_new.y_pos), cv::Point2i(q_near.x_pos,q_near.y_pos), cv::Scalar(0,127,127), 2);
-
-            showImage("Trees", map_show);
-            cv::waitKey(0);
-            return q_new;
-        }
+        showImage("Trees", map_show);
+        cv::waitKey(10);
+        return q_new;
     }
+    vertex q_empty;
+    return q_empty;
 }
 
 
@@ -201,6 +196,10 @@ vertex RRT::getClosest(vertex q_new)
     return r;
 }
 
+double vDist(vertex q1, vertex q2)
+{
+    return sqrt((q1.x_pos-q2.x_pos)*(q1.x_pos-q2.x_pos)+(q1.y_pos-q2.y_pos)*(q1.y_pos-q2.y_pos));
+}
 
 
 bool collFreePath(vertex q1, vertex q2, cv::Mat map)
@@ -384,6 +383,46 @@ std::vector<vertex> ESTquery(vertex q_start, vertex q_goal, int n, cv::Mat map)
     }
 
     // Path not found within max iterations, return empty list!
+    std::vector<vertex> empty_path;
+    return empty_path;
+}
+
+std::vector<vertex> RRTquery(vertex q_start, vertex q_goal, int n, cv::Mat map)
+{
+    std::vector<vertex> path;
+    cv::Mat map_show = map.clone();
+
+    RRT T1(q_start, map);
+    RRT T2(q_goal, map);
+
+    for (int i = 0; i < n; i++)
+    {
+        // Generate a random collision free vertex on the map
+        std::uniform_int_distribution<int> y(0, map.rows);
+        std::uniform_int_distribution<int> x(0, map.cols);
+        vertex q;
+        q.x_pos = x(generator);
+        q.y_pos = y(generator);
+
+        vertex q_new1 = T1.extendRRT(map_show, q);
+
+        if( q_new1.origin_indx >= 0)
+        {
+            vertex q_new2 = T2.extendRRT(map_show, q_new1);
+            if (q_new1.x_pos == q_new2.x_pos && q_new1.y_pos == q_new2.y_pos)
+            {
+                std::cout << "Path found with RRT" << std::endl;
+                return path;
+            }
+            RRT temp = T1;
+            T1 = T2;
+            T2 = temp;
+        }
+
+
+
+    }
+    std::cout << "Failure! Path not found" << std::endl;
     std::vector<vertex> empty_path;
     return empty_path;
 }

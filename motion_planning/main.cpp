@@ -15,6 +15,9 @@
 
 /* Driver includes */
 
+static std::random_device rde;
+static std::default_random_engine generat(rde());
+
 
 int main()
 {
@@ -34,8 +37,11 @@ int main()
 
     // Define ending position
     vertex q_goal;
-    q_goal.x_pos = 800;
-    q_goal.y_pos = 360;
+    //q_goal.x_pos = 800;
+    //q_goal.y_pos = 360;
+
+    q_goal.x_pos = 30;
+    q_goal.y_pos = 30;
 
 //    // Make a query from one configuration to the other on the map
 //    std::vector<vertex> path = ESTquery(q_start,q_goal, 200, map);
@@ -46,11 +52,20 @@ int main()
 //        std::cout << "x: " << v.x_pos << " , y: " << v.y_pos << std::endl;
 //    }
 
-    RRT rrt_demo(q_start, map);
-    for (int i = 0; i < 5; i++)
-    {
-        rrt_demo.extendRRT(map);
-    }
+//    RRT rrt_demo(q_start, map);
+//    for (int i = 0; i < 2000; i++)
+//    {
+//        // Generate a random collision free vertex on the map
+//        std::uniform_int_distribution<int> y(0, map.rows);
+//        std::uniform_int_distribution<int> x(0, map.cols);
+//        vertex q;
+//        q.x_pos = x(generat);
+//        q.y_pos = y(generat);
+
+//        rrt_demo.extendRRT(map, q);
+//    }
+
+    RRTquery(q_start, q_goal, 1000, map);
 
 
 
